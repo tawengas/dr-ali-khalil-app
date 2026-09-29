@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>الخدمات — النخبة الطبية</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+  <style>
+    .page-hero {
+      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
+      padding: calc(var(--safe-top) + 100px) 20px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; inset: -50%;
+      background: radial-gradient(circle, rgba(201,169,97,0.15), transparent 60%);
+    }
+    .page-hero-content { position: relative; z-index: 1; }
+    .page-hero-tag {
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 3px; margin-bottom: 10px;
+    }
+    .page-hero-title {
+      color: #fff; font-size: 1.875rem; font-weight: 900;
+      line-height: 1.2;
+    }
+    .page-hero-title span {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .filters {
+      padding: 16px 20px; background: #fff;
+      position: sticky; top: 62px; z-index: 50;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .search-box { position: relative; margin-bottom: 12px; }
+    .search-box input {
+      width: 100%; padding: 13px 42px 13px 16px;
+      border: 1.5px solid var(--gray-light); border-radius: 14px;
+      font-family: inherit; font-size: 15px;
+    }
+    .search-box input:focus {
+      outline: none; border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201,169,97,0.12);
+    }
+    .search-box svg {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%); color: var(--gray);
+    }
+    .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      padding: 8px 16px; border-radius: 999px;
+      background: #fff; border: 1.5px solid var(--gray-light);
+      font-family: inherit; font-size: 13px; font-weight: 700;
+      color: var(--gray); white-space: nowrap; cursor: pointer;
+    }
+    .chip.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000; border-color: var(--gold);
+    }
+    .services-list {
+      padding: 16px 20px 120px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .service-item {
+      background: #fff; border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 20px; padding: 16px;
+      display: flex; gap: 14px; cursor: pointer;
+      transition: all .2s;
+    }
+    .service-item:active { transform: scale(0.98); }
+    .service-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: rgba(201,169,97,0.1);
+      border: 1px solid rgba(201,169,97,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+    .service-body { flex: 1; min-width: 0; }
+    .service-cat {
+      font-size: 10.5px; color: var(--gold-dark);
+      font-weight: 700; letter-spacing: 1px;
+      margin-bottom: 4px; text-transform: uppercase;
+    }
+    .service-name {
+      font-size: 15px; font-weight: 800; color: #000;
+      margin-bottom: 6px; line-height: 1.3;
+    }
+    .service-desc {
+      font-size: 12.5px; color: var(--gray);
+      line-height: 1.5; margin-bottom: 8px;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .service-meta {
+      display: flex; justify-content: space-between;
+      align-items: center;
+    }
+    .service-duration { font-size: 12px; color: var(--gray); }
+    .service-price {
+      font-size: 16px; font-weight: 900; color: var(--gold-dark);
+    }
+    .service-price small { font-size: 10px; opacity: 0.7; }
+    .empty {
+      text-align: center; padding: 60px 20px;
+    }
+    .empty-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.5; }
+    .empty-title { font-size: 1.125rem; font-weight: 800; margin-bottom: 8px; }
+    .empty-text { color: var(--gray); font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header dark">
+    <a href="/" class="app-header-logo">
+      <div class="app-header-logo-icon">🏥</div>
+      <div class="app-header-title">النخبة <span>الطبية</span></div>
+    </a>
+    <button class="app-header-btn" onclick="goBack()" aria-label="رجوع">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="page-hero">
+    <div class="page-hero-content">
+      <div class="page-hero-tag">OUR SERVICES</div>
+      <h1 class="page-hero-title">خدماتنا <span>المتميزة</span></h1>
+    </div>
+  </section>
+
+  <section class="filters">
+    <div class="search-box">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="ابحث عن خدمة...">
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip active" data-filter="all">الكل</button>
+      <button class="chip" data-filter="أسنان">🦷 أسنان</button>
+      <button class="chip" data-filter="جراحة">🔬 جراحة</button>
+      <button class="chip" data-filter="استشارة">📋 استشارة</button>
+    </div>
+  </section>
+
+  <section class="services-list" id="services-list"></section>
+
+  <nav class="bottom-nav">
+    <a href="/" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/>
+      </svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="/services.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="2"/>
+        <rect x="14" y="3" width="7" height="7" rx="2"/>
+        <rect x="3" y="14" width="7" height="7" rx="2"/>
+        <rect x="14" y="14" width="7" height="7" rx="2"/>
+      </svg>
+      <span>الخدمات</span>
+    </a>
+    <a href="/book.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span>احجز</span>
+    </a>
+    <a href="/track.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <span>تتبع</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { servicesAPI } from '/js/api.js';
+    import { haptic, helpers } from '/js/ui.js';
+    import '/js/app.js';
+
+    let allServices = [];
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    async function load() {
+      const c = document.getElementById('services-list');
+      try {
+        const data = await servicesAPI.list();
+        if (!data.success || !data.data?.length) {
+          c.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><div class="empty-title">لا توجد خدمات</div></div>`;
+          return;
+        }
+        allServices = data.data;
+        render();
+      } catch (err) {
+        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div><div class="empty-text">حاول مرة أخرى</div><button class="btn btn-primary" style="margin-top:16px" onclick="location.reload()">إعادة المحاولة</button></div>`;
+      }
+    }
+
+    function render() {
+      const c = document.getElementById('services-list');
+      let filtered = allServices;
+
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(s => s.category && s.category.includes(currentFilter));
+      }
+      if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        filtered = filtered.filter(s => 
+          s.name.toLowerCase().includes(q) || 
+          (s.description && s.description.toLowerCase().includes(q))
+        );
+      }
+
+      if (!filtered.length) {
+        c.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">لا توجد نتائج</div><div class="empty-text">جرب بحث تاني</div></div>`;
+        return;
+      }
+
+      c.innerHTML = filtered.map(s => `
+        <div class="service-item" onclick="window.location.href='/book.html?service=${s.id}'">
+          <div class="service-icon">${s.icon || '⚕️'}</div>
+          <div class="service-body">
+            <div class="service-cat">${helpers.escape(s.category || 'خدمة')}</div>
+            <div class="service-name">${helpers.escape(s.name)}</div>
+            ${s.description ? `<div class="service-desc">${helpers.escape(s.description)}</div>` : ''}
+            <div class="service-meta">
+              <span class="service-duration">⏱️ ${s.duration_minutes || 30} د</span>
+              <span class="service-price">${helpers.formatPrice(s.price_aed)} <small>AED</small></span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('search-input').addEventListener('input', helpers.debounce(e => {
+      currentSearch = e.target.value.trim();
+      render();
+    }, 200));
+
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        haptic.light();
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentFilter = chip.dataset.filter;
+        render();
+      });
+    });
+
+    load();
+  </script>
+</body>
+</html>
