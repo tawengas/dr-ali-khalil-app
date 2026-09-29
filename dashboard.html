@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>لوحة التحكم — النخبة الطبية</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+  <style>
+    .dash-header {
+      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
+      padding: calc(var(--safe-top) + 90px) 20px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .dash-header::before {
+      content: ''; position: absolute; inset: -50%;
+      background: radial-gradient(circle at 30% 30%, rgba(201,169,97,0.15), transparent 60%);
+      animation: floatBg 20s ease-in-out infinite;
+    }
+    @keyframes floatBg {
+      0%, 100% { transform: translate(0,0); }
+      50% { transform: translate(-30px,-30px); }
+    }
+    .dash-content { position: relative; z-index: 1; }
+    .welcome {
+      color: rgba(255,255,255,0.6);
+      font-size: 13px; font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .doctor-name {
+      color: #fff; font-size: 1.5rem;
+      font-weight: 900; margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .doctor-clinic {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: rgba(201,169,97,0.15);
+      border: 1px solid rgba(201,169,97,0.3);
+      color: var(--gold);
+      border-radius: 999px;
+      font-size: 12px; font-weight: 700;
+    }
+    .stats-grid {
+      padding: 0 20px;
+      margin-top: -30px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .stat-icon.gold { background: rgba(201,169,97,0.15); }
+    .stat-icon.green { background: rgba(34,197,94,0.12); }
+    .stat-icon.orange { background: rgba(245,158,11,0.12); }
+    .stat-icon.blue { background: rgba(59,130,246,0.12); }
+    .stat-body { flex: 1; min-width: 0; }
+    .stat-value {
+      font-size: 1.5rem; font-weight: 900;
+      color: #000; line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      font-size: 11px; color: var(--gray);
+      font-weight: 700; margin-top: 2px;
+    }
+    .section-area {
+      padding: 24px 20px 100px;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-head-title {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: #000;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 16px;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1.5px solid var(--gray-light);
+      font-family: inherit;
+      font-size: 12.5px; font-weight: 700;
+      color: var(--gray); white-space: nowrap;
+      cursor: pointer; transition: all .2s;
+    }
+    .tab.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000; border-color: var(--gold);
+    }
+    .appt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .appt-item {
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .appt-item::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 4px; height: 100%;
+    }
+    .appt-item.status-pending::before { background: #F59E0B; }
+    .appt-item.status-confirmed::before { background: #22C55E; }
+    .appt-item.status-completed::before { background: #3B82F6; }
+    .appt-item.status-cancelled::before { background: #EF4444; }
+    .appt-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .appt-name {
+      font-size: 15px; font-weight: 800;
+      color: #000; margin-bottom: 4px;
+    }
+    .appt-service {
+      font-size: 12px; color: var(--gold-dark);
+      font-weight: 700;
+    }
+    .appt-status-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px; font-weight: 700;
+      white-space: nowrap;
+    }
+    .appt-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px 0;
+      border-top: 1px solid var(--gray-light);
+      border-bottom: 1px solid var(--gray-light);
+      margin-bottom: 12px;
+    }
+    .appt-info-row {
+      display: flex; align-items: center;
+      gap: 10px; font-size: 13px;
+    }
+    .appt-info-icon {
+      width: 24px; height: 24px;
+      border-radius: 7px;
+      background: var(--gray-lighter);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0;
+    }
+    .appt-info-text {
+      color: #000; font-weight: 600;
+    }
+    .appt-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .action {
+      padding: 11px;
+      border-radius: 12px;
+      border: none;
+      font-family: inherit;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px;
+    }
+    .action:active { transform: scale(0.96); }
+    .action-confirm {
+      background: rgba(34,197,94,0.12);
+      color: #15803D;
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+    .action-complete {
+      background: rgba(59,130,246,0.12);
+      color: #1D4ED8;
+      border: 1px solid rgba(59,130,246,0.25);
+    }
+    .action-cancel {
+      background: rgba(239,68,68,0.1);
+      color: #B91C1C;
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .action-call {
+      background: rgba(201,169,97,0.12);
+      color: var(--gold-dark);
+      border: 1px solid rgba(201,169,97,0.25);
+    }
+    .logout-btn {
+      width: 100%;
+      padding: 14px;
+      background: #fff;
+      color: #EF4444;
+      border: 1.5px solid rgba(239,68,68,0.2);
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer; transition: all .2s;
+      margin-top: 20px;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px;
+    }
+    .logout-btn:active {
+      background: rgba(239,68,68,0.05);
+      transform: scale(0.98);
+    }
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .empty-icon { font-size: 56px; margin-bottom: 12px; opacity: 0.5; }
+    .empty-title {
+      font-size: 1.125rem; font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .empty-text {
+      color: var(--gray); font-size: 13.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header dark">
+    <a href="/" class="app-header-logo">
+      <div class="app-header-logo-icon">🏥</div>
+      <div class="app-header-title">النخبة <span>الطبية</span></div>
+    </a>
+    <button class="app-header-btn" onclick="logout()" aria-label="خروج">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="dash-header">
+    <div class="dash-content">
+      <div class="welcome">مرحباً بك 👋</div>
+      <div class="doctor-name" id="doctor-name">...</div>
+      <div class="doctor-clinic" id="doctor-clinic">...</div>
+    </div>
+  </section>
+
+  <section class="stats-grid" id="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon gold">📊</div>
+      <div class="stat-body">
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">إجمالي الحجوزات</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">⏳</div>
+      <div class="stat-body">
+        <div class="stat-value" id="stat-today">—</div>
+        <div class="stat-label">حجوزات النهاردة</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">✅</div>
+      <div class="stat-body">
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-label">قيد الانتظار</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🎉</div>
+      <div class="stat-body">
+        <div class="stat-value" id="stat-completed">—</div>
+        <div class="stat-label">مكتملة</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-area">
+    <div class="section-head">
+      <div class="section-head-title">📅 المواعيد</div>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab active" data-filter="all">الكل</button>
+      <button class="tab" data-filter="pending">⏳ قيد الانتظار</button>
+      <button class="tab" data-filter="confirmed">✅ مؤكدة</button>
+      <button class="tab" data-filter="completed">🎉 مكتملة</button>
+      <button class="tab" data-filter="cancelled">❌ ملغية</button>
+    </div>
+
+    <div class="appt-list" id="appt-list"></div>
+
+    <button class="logout-btn" onclick="logout()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+      </svg>
+      تسجيل الخروج
+    </button>
+  </section>
+
+  <script type="module">
+    import { auth, authAPI, appointmentsAPI, doctorAPI } from '/js/api.js';
+    import { toast, haptic, loader, sheet, helpers } from '/js/ui.js';
+    import '/js/app.js';
+
+    // Check auth
+    if (!auth.isLoggedIn()) {
+      window.location.href = '/login.html';
+    }
+
+    const user = auth.getUser();
+    if (user && user.role !== 'doctor') {
+      if (user.role === 'admin') window.location.href = '/admin.html';
+      else window.location.href = '/login.html';
+    }
+
+    let allAppointments = [];
+    let currentFilter = 'all';
+
+    // Load user data
+    document.getElementById('doctor-name').textContent = user?.full_name || 'دكتور';
+    document.getElementById('doctor-clinic').innerHTML = `
+      <span>🏥</span>
+      <span>عيادة رقم ${user?.clinic_id || '—'}</span>
+    `;
+
+    // Load stats
+    async function loadStats() {
+      try {
+        const data = await doctorAPI.stats();
+        if (data.success) {
+          document.getElementById('stat-total').textContent = data.data.total || 0;
+          document.getElementById('stat-today').textContent = data.data.today || 0;
+          document.getElementById('stat-pending').textContent = data.data.pending || 0;
+          document.getElementById('stat-completed').textContent = data.data.completed || 0;
+        }
+      } catch (err) {
+        console.error('Stats error:', err);
+      }
+    }
+
+    // Load appointments
+    async function loadAppointments() {
+      const container = document.getElementById('appt-list');
+      container.innerHTML = `
+        <div class="skeleton skeleton-card" style="height:120px;"></div>
+        <div class="skeleton skeleton-card" style="height:120px;"></div>
+      `;
+
+      try {
+        const data = await appointmentsAPI.doctorList();
+        allAppointments = data.data || [];
+        renderAppointments();
+      } catch (err) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">⚠️</div>
+            <div class="empty-title">تعذّر التحميل</div>
+            <div class="empty-text">حاول تحديث الصفحة</div>
+          </div>
+        `;
+      }
+    }
+
+    function renderAppointments() {
+      const container = document.getElementById('appt-list');
+      
+      let filtered = allAppointments;
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(a => a.status === currentFilter);
+      }
+
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">📭</div>
+            <div class="empty-title">لا توجد مواعيد</div>
+            <div class="empty-text">${currentFilter === 'all' ? 'ستظهر المواعيد هنا عند الحجز' : 'جرب فلتر تاني'}</div>
+          </div>
+        `;
+        return;
+      }
+
+      const statusMap = {
+        pending: { text: '⏳ قيد الانتظار', bg: 'rgba(245,158,11,0.15)', color: '#B45309' },
+        confirmed: { text: '✅ مؤكد', bg: 'rgba(34,197,94,0.15)', color: '#15803D' },
+        completed: { text: '🎉 مكتمل', bg: 'rgba(59,130,246,0.15)', color: '#1D4ED8' },
+        cancelled: { text: '❌ ملغي', bg: 'rgba(239,68,68,0.12)', color: '#B91C1C' }
+      };
+
+      container.innerHTML = filtered.map(a => {
+        const st = statusMap[a.status] || statusMap.pending;
+        return `
+          <div class="appt-item status-${a.status}">
+            <div class="appt-top">
+              <div style="flex:1;min-width:0;">
+                <div class="appt-name">${helpers.escape(a.customer_name)}</div>
+                <div class="appt-service">${a.service_icon || ''} ${helpers.escape(a.service_name || 'خدمة عامة')}</div>
+              </div>
+              <div class="appt-status-badge" style="background:${st.bg};color:${st.color};">
+                ${st.text}
+              </div>
+            </div>
+            
+            <div class="appt-info">
+              <div class="appt-info-row">
+                <div class="appt-info-icon">📅</div>
+                <div class="appt-info-text">${helpers.formatDate(a.appointment_date)} — ${a.appointment_time}</div>
+              </div>
+              <div class="appt-info-row">
+                <div class="appt-info-icon">📞</div>
+                <div class="appt-info-text" dir="ltr">${helpers.escape(a.customer_phone)}</div>
+              </div>
+              ${a.notes ? `
+                <div class="appt-info-row">
+                  <div class="appt-info-icon">📝</div>
+                  <div class="appt-info-text">${helpers.escape(a.notes)}</div>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="appt-actions">
+              ${a.status === 'pending' ? `
+                <button class="action action-confirm" onclick="updateStatus(${a.id}, 'confirmed')">
+                  ✅ تأكيد
+                </button>
+                <button class="action action-cancel" onclick="updateStatus(${a.id}, 'cancelled')">
+                  ❌ إلغاء
+                </button>
+              ` : ''}
+              ${a.status === 'confirmed' ? `
+                <button class="action action-complete" onclick="updateStatus(${a.id}, 'completed')">
+                  🎉 مكتمل
+                </button>
+                <button class="action action-cancel" onclick="updateStatus(${a.id}, 'cancelled')">
+                  ❌ إلغاء
+                </button>
+              ` : ''}
+              ${(a.status === 'completed' || a.status === 'cancelled') ? `
+                <button class="action action-call" onclick="window.location.href='tel:${a.customer_phone}'" style="grid-column: 1 / -1;">
+                  📞 اتصال بالمريض
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update status
+    window.updateStatus = async function(id, newStatus) {
+      const statusText = {
+        confirmed: 'تأكيد',
+        completed: 'إكمال',
+        cancelled: 'إلغاء'
+      }[newStatus] || 'تحديث';
+
+      const ok = await sheet.confirm({
+        title: `${statusText} الموعد؟`,
+        message: `هل أنت متأكد من ${statusText} هذا الموعد؟`,
+        confirmText: `${statusText}`,
+        cancelText: 'رجوع',
+        variant: newStatus === 'cancelled' ? 'btn-dark' : 'btn-primary'
+      });
+
+      if (!ok) return;
+
+      loader.show();
+      try {
+        await appointmentsAPI.doctorUpdate(id, { status: newStatus });
+        loader.hide();
+        haptic.success();
+        toast.success(`تم ${statusText} الموعد`);
+        await loadAppointments();
+        await loadStats();
+      } catch (err) {
+        loader.hide();
+        haptic.error();
+        toast.error('تعذّر التحديث');
+      }
+    };
+
+    // Filter tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        haptic.light();
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        renderAppointments();
+      });
+    });
+
+    // Logout
+    window.logout = async function() {
+      const ok = await sheet.confirm({
+        title: 'تسجيل الخروج؟',
+        message: 'هل تريد الخروج من التطبيق؟',
+        confirmText: 'خروج',
+        cancelText: 'إلغاء',
+        variant: 'btn-dark'
+      });
+      
+      if (ok) {
+        await authAPI.logout();
+        haptic.medium();
+        window.location.href = '/login.html';
+      }
+    };
+
+    // Init
+    loadStats();
+    loadAppointments();
+  </script>
+</body>
+</html>
