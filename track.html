@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>تتبع الحجز — النخبة الطبية</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+  <style>
+    .page-hero {
+      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
+      padding: calc(var(--safe-top) + 100px) 20px 40px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; inset: -50%;
+      background: radial-gradient(circle, rgba(201,169,97,0.15), transparent 60%);
+    }
+    .page-hero-content { position: relative; z-index: 1; }
+    .page-hero-tag {
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 3px; margin-bottom: 10px;
+    }
+    .page-hero-title {
+      color: #fff; font-size: 1.875rem; font-weight: 900;
+      line-height: 1.2;
+    }
+    .page-hero-title span {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .track-wrapper {
+      padding: 24px 20px 120px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .search-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+    .search-card-title {
+      font-size: 15px; font-weight: 800; color: #000;
+      margin-bottom: 6px;
+    }
+    .search-card-desc {
+      font-size: 13px; color: var(--gray);
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .search-input-wrap {
+      display: flex; gap: 8px;
+    }
+    .search-input-wrap input {
+      flex: 1; padding: 13px 16px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 14px;
+      font-family: inherit; font-size: 15px;
+    }
+    .search-input-wrap input:focus {
+      outline: none; border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201,169,97,0.12);
+    }
+    .search-btn {
+      padding: 0 20px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000; border: none;
+      border-radius: 14px;
+      font-family: inherit;
+      font-weight: 800; font-size: 14px;
+      cursor: pointer; transition: all .2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .search-btn:active { transform: scale(0.96); }
+    .search-btn:disabled { opacity: 0.6; }
+    .appt-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .appt-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+    }
+    .appt-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .appt-id {
+      font-size: 12px; font-weight: 700;
+      color: var(--gray);
+    }
+    .appt-status {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px; font-weight: 700;
+    }
+    .appt-clinic {
+      font-size: 16px; font-weight: 800;
+      color: #000; margin-bottom: 4px;
+    }
+    .appt-service {
+      font-size: 13px; color: var(--gold-dark);
+      font-weight: 700; margin-bottom: 14px;
+    }
+    .appt-details {
+      display: flex; flex-direction: column; gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--gray-light);
+    }
+    .appt-detail {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px;
+    }
+    .appt-detail-icon {
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      background: var(--gray-lighter);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .appt-detail-text {
+      color: #000; font-weight: 600;
+    }
+    .empty-search {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .empty-icon {
+      font-size: 64px; margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .empty-title {
+      font-size: 1.125rem; font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .empty-text {
+      color: var(--gray); font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header dark">
+    <a href="/" class="app-header-logo">
+      <div class="app-header-logo-icon">🏥</div>
+      <div class="app-header-title">النخبة <span>الطبية</span></div>
+    </a>
+    <button class="app-header-btn" onclick="goBack()" aria-label="رجوع">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="page-hero">
+    <div class="page-hero-content">
+      <div class="page-hero-tag">TRACK</div>
+      <h1 class="page-hero-title">تتبع <span>حجزك</span></h1>
+    </div>
+  </section>
+
+  <div class="track-wrapper">
+    
+    <div class="search-card">
+      <div class="search-card-title">🔍 ابحث برقم الموبايل</div>
+      <div class="search-card-desc">اكتب رقم الموبايل اللي استخدمته في الحجز</div>
+      <div class="search-input-wrap">
+        <input type="tel" id="phone-input" placeholder="+971 50 123 4567" dir="ltr">
+        <button class="search-btn" id="search-btn" onclick="search()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          ابحث
+        </button>
+      </div>
+    </div>
+
+    <div id="results"></div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/>
+      </svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="/services.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="2"/>
+        <rect x="14" y="3" width="7" height="7" rx="2"/>
+        <rect x="3" y="14" width="7" height="7" rx="2"/>
+        <rect x="14" y="14" width="7" height="7" rx="2"/>
+      </svg>
+      <span>الخدمات</span>
+    </a>
+    <a href="/book.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span>احجز</span>
+    </a>
+    <a href="/track.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <span>تتبع</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { toast, haptic, loader, helpers } from '/js/ui.js';
+    import '/js/app.js';
+
+    // Check URL for phone param
+    const urlParams = new URLSearchParams(window.location.search);
+    const prePhone = urlParams.get('phone');
+    if (prePhone) {
+      document.getElementById('phone-input').value = prePhone;
+      setTimeout(search, 500);
+    }
+
+    window.search = async function() {
+      const phone = document.getElementById('phone-input').value.trim();
+      const results = document.getElementById('results');
+
+      if (!phone || phone.length < 8) {
+        toast.error('اكتب رقم موبايل صحيح');
+        haptic.error();
+        return;
+      }
+
+      const btn = document.getElementById('search-btn');
+      btn.disabled = true;
+      loader.show();
+
+      try {
+        // Direct fetch to appointments API with phone filter
+        const res = await fetch(`https://medical-app-api.gomanji-00.workers.dev/api/patient/appointments`, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        // Since patient API needs auth, use a different approach
+        // We'll query via a public endpoint - for now, use search by phone from all appointments
+        const response = await fetch(`https://medical-app-api.gomanji-00.workers.dev/api/appointments/search?phone=${encodeURIComponent(phone)}`);
+        
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          data = { success: false };
+        }
+
+        loader.hide();
+        btn.disabled = false;
+
+        // If search endpoint doesn't exist, show helpful message
+        if (!data.success) {
+          // Fallback: show message
+          results.innerHTML = `
+            <div class="empty-search">
+              <div class="empty-icon">🔍</div>
+              <div class="empty-title">ميزة التتبع قريباً</div>
+              <div class="empty-text">
+                للاستفسار عن حجزك، تواصل مع العيادة مباشرة
+              </div>
+              <button class="btn btn-primary" style="margin-top:20px" onclick="location.href='/'">
+                العودة للرئيسية
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        const appointments = data.data || [];
+        
+        if (!appointments.length) {
+          results.innerHTML = `
+            <div class="empty-search">
+              <div class="empty-icon">📭</div>
+              <div class="empty-title">لا توجد حجوزات</div>
+              <div class="empty-text">لم نجد أي حجز بهذا الرقم</div>
+              <button class="btn btn-primary" style="margin-top:20px" onclick="location.href='/book.html'">
+                احجز الآن
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        renderResults(appointments);
+
+      } catch (err) {
+        loader.hide();
+        btn.disabled = false;
+        results.innerHTML = `
+          <div class="empty-search">
+            <div class="empty-icon">⚠️</div>
+            <div class="empty-title">تعذّر البحث</div>
+            <div class="empty-text">تحقق من اتصالك بالإنترنت</div>
+          </div>
+        `;
+      }
+    };
+
+    function renderResults(appointments) {
+      const results = document.getElementById('results');
+      results.innerHTML = `
+        <div style="margin-bottom:12px;font-size:13px;color:var(--gray);text-align:center;">
+          وجدنا ${appointments.length} حجز
+        </div>
+      ` + appointments.map(a => `
+        <div class="appt-card">
+          <div class="appt-header">
+            <span class="appt-id">رقم الحجز #${a.id}</span>
+            <span class="appt-status badge ${helpers.getStatusBadge(a.status).class}">
+              ${helpers.getStatusBadge(a.status).text}
+            </span>
+          </div>
+          <div class="appt-clinic">${helpers.escape(a.clinic_name || 'العيادة')}</div>
+          ${a.service_name ? `<div class="appt-service">${a.service_icon || ''} ${helpers.escape(a.service_name)}</div>` : ''}
+          <div class="appt-details">
+            <div class="appt-detail">
+              <div class="appt-detail-icon">📅</div>
+              <div class="appt-detail-text">${helpers.formatDate(a.appointment_date)} — ${a.appointment_time}</div>
+            </div>
+            <div class="appt-detail">
+              <div class="appt-detail-icon">👤</div>
+              <div class="appt-detail-text">${helpers.escape(a.customer_name)}</div>
+            </div>
+            <div class="appt-detail">
+              <div class="appt-detail-icon">📞</div>
+              <div class="appt-detail-text" dir="ltr">${helpers.escape(a.customer_phone)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
