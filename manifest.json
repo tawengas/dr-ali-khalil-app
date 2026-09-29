@@ -1,41 +1,65 @@
 {
-  "name": "عيادات النخبة الطبية",
+  "name": "النخبة الطبية",
   "short_name": "النخبة الطبية",
-  "description": "تطبيق عيادات النخبة الطبية - حجز مواعيد وإدارة عيادات",
+  "description": "تطبيق عيادات النخبة الطبية - رعاية طبية بمعايير عالمية",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
   "orientation": "portrait",
   "background_color": "#0A0A0A",
   "theme_color": "#C9A961",
   "lang": "ar",
   "dir": "rtl",
   "scope": "/",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["medical", "health", "business"],
+  "categories": ["medical", "health", "lifestyle"],
   "shortcuts": [
     {
       "name": "احجز موعد",
       "short_name": "حجز",
+      "description": "احجز موعد في أي عيادة",
       "url": "/book.html",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "مواعيدي",
-      "short_name": "مواعيد",
-      "url": "/appointments.html"
+      "name": "الخدمات",
+      "short_name": "خدمات",
+      "description": "تصفح الخدمات الطبية",
+      "url": "/services.html",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "تتبع حجزي",
+      "short_name": "تتبع",
+      "description": "تتبع حالة حجزك",
+      "url": "/track.html",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
