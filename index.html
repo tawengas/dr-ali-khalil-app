@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="description" content="النخبة الطبية — رعاية طبية بمعايير عالمية">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="النخبة الطبية">
+  
+  <title>النخبة الطبية</title>
+  
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <!-- Extra styles for homepage -->
+  <style>
+    /* ============ HERO ============ */
+    .hero {
+      min-height: 88vh;
+      background: linear-gradient(160deg, #0A0A0A 0%, #1A1A1A 50%, #0F0F0F 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--safe-top) + 100px) 24px 60px;
+      overflow: hidden;
+      text-align: center;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 30% 20%, rgba(201, 169, 97, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(201, 169, 97, 0.1) 0%, transparent 50%);
+      animation: floatBg 20s ease-in-out infinite;
+    }
+    
+    @keyframes floatBg {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-30px, -30px) rotate(5deg); }
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(201, 169, 97, 0.12);
+      border: 1px solid rgba(201, 169, 97, 0.3);
+      border-radius: var(--r-full);
+      color: var(--gold-light);
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease;
+    }
+    
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+      box-shadow: 0 0 12px var(--gold);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+    
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.03em;
+      animation: fadeInUp 0.8s ease 0.1s both;
+    }
+    
+    .hero-title span {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+    
+    .hero-subtitle {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 400px;
+      margin: 0 auto 32px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease 0.2s both;
+      line-height: 1.7;
+    }
+    
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+    
+    .hero-cta {
+      padding: 17px 32px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--black);
+      font-weight: 800;
+      font-size: 16px;
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-gold);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all var(--t-base);
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    
+    .hero-cta:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 16px rgba(201, 169, 97, 0.4);
+    }
+    
+    .hero-cta svg {
+      transition: transform 0.3s ease;
+    }
+    
+    .hero-cta:active svg {
+      transform: translateX(-4px);
+    }
+    
+    .hero-secondary {
+      padding: 15px 32px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all var(--t-fast);
+    }
+    
+    .hero-secondary:active {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(0.97);
+    }
+    
+    .hero-install {
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: var(--r-md);
+      border: 1.5px dashed rgba(201, 169, 97, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--t-fast);
+    }
+    
+    .hero-install:active {
+      background: rgba(201, 169, 97, 0.1);
+      transform: scale(0.97);
+    }
+    
+    /* ============ STATS ============ */
+    .stats-section {
+      padding: 0;
+      margin: -40px 20px 0;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .stats-card {
+      background: var(--white);
+      border-radius: var(--r-xl);
+      padding: 24px 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      animation: fadeInUp 0.8s ease 0.5s both;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    
+    .stat-item {
+      text-align: center;
+      position: relative;
+    }
+    
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: var(--gray-light);
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--gold-dark);
+      display: block;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: var(--gray);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    /* ============ CLINIC CARDS ============ */
+    .clinics-section {
+      padding: 60px 20px 40px;
+    }
+    
+    .clinic-card {
+      background: var(--white);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--r-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--t-base);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    
+    .clinic-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+    }
+    
+    .clinic-card:active {
+      transform: scale(0.985);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .clinic-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .clinic-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(201, 169, 97, 0.15), rgba(201, 169, 97, 0.05));
+      border: 1px solid rgba(201, 169, 97, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    
+    .clinic-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .clinic-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    
+    .clinic-specialty {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(201, 169, 97, 0.1);
+      color: var(--gold-dark);
+      border-radius: var(--r-full);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+    
+    .clinic-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    
+    .clinic-detail {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+    
+    .clinic-detail-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--gray-lighter);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .clinic-detail-text {
+      color: var(--black);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    
+    .clinic-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    
+    .clinic-actions .full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .action-btn {
+      padding: 12px;
+      border-radius: var(--r-md);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all var(--t-fast);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .action-btn:active {
+      transform: scale(0.96);
+    }
+    
+    .action-call {
+      background: rgba(34, 197, 94, 0.1);
+      color: #15803D;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    
+    .action-whatsapp {
+      background: rgba(37, 211, 102, 0.1);
+      color: #128C7E;
+      border: 1px solid rgba(37, 211, 102, 0.2);
+    }
+    
+    .action-book {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--black);
+      box-shadow: 0 4px 12px rgba(201, 169, 97, 0.25);
+      padding: 14px;
+      font-size: 14px;
+    }
+    
+    /* ============ SERVICES ============ */
+    .services-section {
+      padding: 40px 0 60px;
+      background: linear-gradient(180deg, var(--white) 0%, var(--white-soft) 100%);
+    }
+    
+    .services-container {
+      padding: 0 20px;
+    }
+    
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .service-card {
+      background: var(--white);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--r-lg);
+      padding: 18px 14px;
+      text-align: center;
+      transition: all var(--t-base);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .service-card:active {
+      transform: scale(0.97);
+      border-color: var(--gold);
+      box-shadow: 0 8px 20px rgba(201, 169, 97, 0.15);
+    }
+    
+    .service-icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+      display: block;
+      line-height: 1;
+    }
+    
+    .service-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 6px;
+      line-height: 1.3;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.01em;
+    }
+    
+    .service-price {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gold-dark);
+      letter-spacing: -0.01em;
+    }
+    
+    .service-price small {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-left: 2px;
+    }
+    
+    /* ============ CTA ============ */
+    .cta-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+    
+    .cta-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--black);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    
+    .cta-text {
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 24px;
+      max-width: 340px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    
+    .login-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    
+    /* ============ FOOTER ============ */
+    .app-footer {
+      background: var(--black);
+      color: rgba(255, 255, 255, 0.5);
+      padding: 40px 20px 32px;
+      text-align: center;
+      font-size: 13px;
+    }
+    
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .footer-logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .footer-title {
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 15px;
+    }
+    
+    .footer-title span { color: var(--white); }
+    
+    .footer-text {
+      margin-top: 8px;
+      opacity: 0.7;
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+    
+    .footer-copy {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(201, 169, 97, 0.15);
+      font-size: 11.5px;
+      opacity: 0.5;
+    }
+    
+    /* ============ RESPONSIVE ============ */
+    @media (min-width: 640px) {
+      .hero-title { font-size: 3rem; }
+      .services-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero-actions { flex-direction: row; max-width: 500px; }
+      .hero-cta, .hero-secondary { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="app-header dark">
+    <a href="/" class="app-header-logo">
+      <div class="app-header-logo-icon">🏥</div>
+      <div class="app-header-title">النخبة <span>الطبية</span></div>
+    </a>
+    <button class="app-header-btn" onclick="showMenu()" aria-label="القائمة">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      <span>رعاية طبية بمعايير عالمية</span>
+    </div>
+    
+    <h1 class="hero-title">
+      صحتك تستحق<br>
+      <span>الأفضل</span>
+    </h1>
+    
+    <p class="hero-subtitle">
+      نخبة من أفضل الأطباء المتخصصين<br>
+      في طب الأسنان والجراحة العامة
+    </p>
+    
+    <div class="hero-actions">
+      <a href="/book.html" class="hero-cta">
+        <span>احجز موعدك الآن</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </a>
+      <a href="/services.html" class="hero-secondary">
+        <span>تصفح الخدمات</span>
+      </a>
+      <button class="hero-install" data-pwa-install>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M12 3v14M6 12l6 6 6-6M5 21h14"/>
+        </svg>
+        <span>ثبّت التطبيق</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats-section fade-in">
+    <div class="stats-card">
+      <div class="stat-item">
+        <span class="stat-value">+15</span>
+        <div class="stat-label">سنة خبرة</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">+5000</span>
+        <div class="stat-label">مريض سعيد</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">14</span>
+        <div class="stat-label">خدمة متخصصة</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLINICS ============ -->
+  <section class="clinics-section">
+    <div class="section-header fade-in">
+      <span class="section-tag">OUR CLINICS</span>
+      <h2 class="section-title">عياداتنا المتخصصة</h2>
+      <p class="section-subtitle">اختر العيادة المناسبة لك</p>
+    </div>
+    
+    <div id="clinics-container">
+      <!-- Skeleton loader -->
+      <div class="clinic-card">
+        <div class="clinic-header">
+          <div class="skeleton" style="width: 56px; height: 56px; border-radius: 16px;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton skeleton-title" style="width: 60%;"></div>
+            <div class="skeleton skeleton-text" style="width: 40%;"></div>
+          </div>
+        </div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="services-section">
+    <div class="services-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">SERVICES</span>
+        <h2 class="section-title">خدماتنا المميزة</h2>
+        <p class="section-subtitle">أحدث التقنيات الطبية</p>
+      </div>
+      
+      <div class="services-grid fade-in" id="services-preview">
+        <!-- Skeleton -->
+        <div class="service-card">
+          <div class="skeleton" style="width: 40px; height: 40px; border-radius: 12px; margin: 0 auto 12px;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%; margin: 0 auto 6px;"></div>
+          <div class="skeleton skeleton-text" style="width: 50%; margin: 0 auto;"></div>
+        </div>
+        <div class="service-card">
+          <div class="skeleton" style="width: 40px; height: 40px; border-radius: 12px; margin: 0 auto 12px;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%; margin: 0 auto 6px;"></div>
+          <div class="skeleton skeleton-text" style="width: 50%; margin: 0 auto;"></div>
+        </div>
+        <div class="service-card">
+          <div class="skeleton" style="width: 40px; height: 40px; border-radius: 12px; margin: 0 auto 12px;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%; margin: 0 auto 6px;"></div>
+          <div class="skeleton skeleton-text" style="width: 50%; margin: 0 auto;"></div>
+        </div>
+        <div class="service-card">
+          <div class="skeleton" style="width: 40px; height: 40px; border-radius: 12px; margin: 0 auto 12px;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%; margin: 0 auto 6px;"></div>
+          <div class="skeleton skeleton-text" style="width: 50%; margin: 0 auto;"></div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 8px;">
+        <a href="/services.html" class="btn btn-primary">
+          عرض كل الخدمات (14)
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="cta-section fade-in">
+    <h2 class="cta-title">هل أنت طبيب أو مسؤول؟</h2>
+    <p class="cta-text">ادخل إلى لوحة التحكم لإدارة المواعيد والعيادات</p>
+    
+    <div class="login-buttons">
+      <a href="/login.html" class="btn btn-primary btn-block">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/>
+        </svg>
+        دخول الأطباء
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="app-footer">
+    <div class="footer-logo">
+      <div class="footer-logo-icon">🏥</div>
+      <div class="footer-title">النخبة <span>الطبية</span></div>
+    </div>
+    <div class="footer-text">رعاية طبية بمعايير عالمية</div>
+    <div class="footer-copy">© 2026 جميع الحقوق محفوظة</div>
+  </footer>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <nav class="bottom-nav">
+    <a href="/" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/>
+      </svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="/services.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="2"/>
+        <rect x="14" y="3" width="7" height="7" rx="2"/>
+        <rect x="3" y="14" width="7" height="7" rx="2"/>
+        <rect x="14" y="14" width="7" height="7" rx="2"/>
+      </svg>
+      <span>الخدمات</span>
+    </a>
+    <a href="/book.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span>احجز</span>
+    </a>
+    <a href="/track.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <span>تتبع</span>
+    </a>
+  </nav>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script type="module">
+    import { clinicsAPI, servicesAPI } from '/js/api.js';
+    import { toast, helpers, haptic } from '/js/ui.js';
+    import '/js/app.js';
+    
+    // ============ LOAD CLINICS ============
+    async function loadClinics() {
+      const container = document.getElementById('clinics-container');
+      
+      try {
+        const data = await clinicsAPI.list();
+        
+        if (!data.success || !data.data || data.data.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🏥</div>
+              <div class="empty-state-title">لا توجد عيادات</div>
+              <div class="empty-state-text">سيتم إضافة العيادات قريباً</div>
+            </div>
+          `;
+          return;
+        }
+        
+        container.innerHTML = '';
+        
+        data.data.forEach((clinic, index) => {
+          const icon = getClinicIcon(clinic.specialty);
+          const card = document.createElement('div');
+          card.className = 'clinic-card fade-in';
+          card.style.animationDelay = `${index * 0.1}s`;
+          
+          card.innerHTML = `
+            <div class="clinic-header">
+              <div class="clinic-icon">${icon}</div>
+              <div class="clinic-info">
+                <div class="clinic-name">${helpers.escape(clinic.name)}</div>
+                <span class="clinic-specialty">${helpers.escape(clinic.specialty || 'عام')}</span>
+              </div>
+            </div>
+            
+            <div class="clinic-details">
+              ${clinic.address ? `
+                <div class="clinic-detail">
+                  <span class="clinic-detail-icon">📍</span>
+                  <span class="clinic-detail-text">${helpers.escape(clinic.address)}</span>
+                </div>
+              ` : ''}
+              ${clinic.working_hours ? `
+                <div class="clinic-detail">
+                  <span class="clinic-detail-icon">🕐</span>
+                  <span class="clinic-detail-text">${helpers.escape(clinic.working_hours)}</span>
+                </div>
+              ` : ''}
+              ${clinic.phone ? `
+                <div class="clinic-detail">
+                  <span class="clinic-detail-icon">📞</span>
+                  <span class="clinic-detail-text" dir="ltr">${helpers.escape(clinic.phone)}</span>
+                </div>
+              ` : ''}
+            </div>
+            
+            <div class="clinic-actions">
+              <a href="tel:${clinic.phone || ''}" class="action-btn action-call" onclick="haptic.light()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                <span>اتصل</span>
+              </a>
+              <a href="https://wa.me/${(clinic.whatsapp || clinic.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('السلام عليكم، أرغب في حجز موعد في ' + clinic.name)}" 
+                 target="_blank" 
+                 class="action-btn action-whatsapp" 
+                 onclick="haptic.light()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                <span>واتساب</span>
+              </a>
+              <a href="/book.html?clinic=${clinic.id}" class="action-btn action-book full-width" onclick="haptic.medium()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span>احجز موعدك</span>
+              </a>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+        // Re-init fade-in
+        helpers.initFadeIn();
+        
+      } catch (error) {
+        console.error('Failed to load clinics:', error);
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <div class="empty-state-title">تعذّر تحميل العيادات</div>
+            <div class="empty-state-text">${error.isNetwork ? 'تحقق من اتصالك بالإنترنت' : 'حاول مرة أخرى'}</div>
+            <button class="btn btn-primary" onclick="location.reload()">إعادة المحاولة</button>
+          </div>
+        `;
+      }
+    }
+    
+    // ============ LOAD SERVICES PREVIEW ============
+    async function loadServicesPreview() {
+      const container = document.getElementById('services-preview');
+      
+      try {
+        const data = await servicesAPI.list();
+        
+        if (!data.success || !data.data || data.data.length === 0) {
+          container.innerHTML = '';
+          return;
+        }
+        
+        // Show first 6 services
+        const services = data.data.slice(0, 6);
+        
+        container.innerHTML = services.map(service => `
+          <a href="/services.html" class="service-card">
+            <span class="service-icon">${service.icon || '⚕️'}</span>
+            <div class="service-name">${helpers.escape(service.name)}</div>
+            <div class="service-price">
+              ${helpers.formatPrice(service.price_aed)}
+              <small>AED</small>
+            </div>
+          </a>
+        `).join('');
+        
+      } catch (error) {
+        console.error('Failed to load services:', error);
+        container.innerHTML = '';
+      }
+    }
+    
+    // ============ HELPERS ============
+    function getClinicIcon(specialty) {
+      if (!specialty) return '🏥';
+      specialty = specialty.toLowerCase();
+      if (specialty.includes('أسنان') || specialty.includes('اسنان') || specialty.includes('dental')) return '🦷';
+      if (specialty.includes('جراح') || specialty.includes('surgery')) return '🔬';
+      if (specialty.includes('جلد') || specialty.includes('skin')) return '✨';
+      if (specialty.includes('أطفال') || specialty.includes('اطفال')) return '👶';
+      return '🏥';
+    }
+    
+    // ============ MENU ============
+    window.showMenu = function() {
+      haptic.medium();
+      const user = localStorage.getItem('elite_user');
+      const isLoggedIn = !!localStorage.getItem('elite_token');
+      
+      import('/js/ui.js').then(({ sheet }) => {
+        const content = document.createElement('div');
+        content.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <a href="/" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
+              🏠 الرئيسية
+            </a>
+            <a href="/services.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
+              📋 الخدمات
+            </a>
+            <a href="/book.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
+              📅 حجز موعد
+            </a>
+            <a href="/track.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
+              🔍 تتبع حجزي
+            </a>
+            <div class="divider"></div>
+            ${isLoggedIn ? `
+              <a href="/dashboard.html" class="btn btn-primary btn-block" style="justify-content: flex-start;">
+                📊 لوحة التحكم
+              </a>
+            ` : `
+              <a href="/login.html" class="btn btn-primary btn-block" style="justify-content: flex-start;">
+                🔐 تسجيل الدخول
+              </a>
+            `}
+          </div>
+        `;
+        
+        sheet.open({
+          title: 'القائمة',
+          content
+        });
+      });
+    };
+    
+    // ============ INIT ============
+    loadClinics();
+    loadServicesPreview();
+  </script>
+</body>
+</html>
