@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>حجز موعد — النخبة الطبية</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+  <style>
+    .page-hero {
+      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
+      padding: calc(var(--safe-top) + 100px) 20px 40px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; inset: -50%;
+      background: radial-gradient(circle, rgba(201,169,97,0.15), transparent 60%);
+    }
+    .page-hero-content { position: relative; z-index: 1; }
+    .page-hero-tag {
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 3px; margin-bottom: 10px;
+    }
+    .page-hero-title {
+      color: #fff; font-size: 1.875rem; font-weight: 900;
+      line-height: 1.2;
+    }
+    .page-hero-title span {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .form-wrapper {
+      padding: 24px 20px 120px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .form-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
+    .form-step-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 800;
+      color: #000; margin-bottom: 16px;
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000; font-size: 13px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .clinic-pick {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .clinic-option {
+      padding: 14px 16px;
+      border: 2px solid var(--gray-light);
+      border-radius: 14px;
+      background: #fff;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .clinic-option:active { transform: scale(0.98); }
+    .clinic-option.selected {
+      border-color: var(--gold);
+      background: rgba(201,169,97,0.05);
+      box-shadow: 0 0 0 4px rgba(201,169,97,0.1);
+    }
+    .clinic-option-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(201,169,97,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .clinic-option-name {
+      font-size: 14px; font-weight: 800;
+      color: #000; margin-bottom: 3px;
+    }
+    .clinic-option-desc {
+      font-size: 12px; color: var(--gray);
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block; font-size: 13px; font-weight: 700;
+      color: #000; margin-bottom: 6px;
+    }
+    .form-label .required { color: #EF4444; }
+    .form-input, .form-select {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 14px; background: #fff;
+      font-family: inherit; font-size: 15px; color: #000;
+      transition: all .2s;
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none; border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201,169,97,0.12);
+    }
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23C9A961' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: left 14px center;
+      padding-left: 44px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .submit-btn {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000; font-family: inherit;
+      font-size: 16px; font-weight: 800;
+      border: none; border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(201,169,97,0.35);
+      cursor: pointer; transition: all .2s;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px;
+    }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header dark">
+    <a href="/" class="app-header-logo">
+      <div class="app-header-logo-icon">🏥</div>
+      <div class="app-header-title">النخبة <span>الطبية</span></div>
+    </a>
+    <button class="app-header-btn" onclick="goBack()" aria-label="رجوع">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="page-hero">
+    <div class="page-hero-content">
+      <div class="page-hero-tag">BOOK NOW</div>
+      <h1 class="page-hero-title">احجز <span>موعدك</span></h1>
+    </div>
+  </section>
+
+  <div class="form-wrapper">
+    
+    <!-- Step 1: Clinic -->
+    <div class="form-card">
+      <div class="form-step-title">
+        <span class="step-num">1</span>
+        <span>اختر العيادة</span>
+      </div>
+      <div class="clinic-pick" id="clinic-pick">
+        <div style="text-align:center;padding:20px;">
+          <div class="skeleton" style="height:70px;border-radius:14px;margin-bottom:10px;"></div>
+          <div class="skeleton" style="height:70px;border-radius:14px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Service & Date -->
+    <div class="form-card">
+      <div class="form-step-title">
+        <span class="step-num">2</span>
+        <span>تفاصيل الموعد</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">الخدمة <span class="required">*</span></label>
+        <select class="form-select" id="service">
+          <option value="">جار التحميل...</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">التاريخ <span class="required">*</span></label>
+          <input type="date" class="form-input" id="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوقت <span class="required">*</span></label>
+          <input type="time" class="form-input" id="time" value="10:00">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Contact -->
+    <div class="form-card">
+      <div class="form-step-title">
+        <span class="step-num">3</span>
+        <span>بياناتك</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">الاسم الكامل <span class="required">*</span></label>
+        <input type="text" class="form-input" id="name" placeholder="مثال: أحمد محمد">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">رقم الموبايل <span class="required">*</span></label>
+        <input type="tel" class="form-input" id="phone" placeholder="+971 50 123 4567" dir="ltr">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ملاحظات (اختياري)</label>
+        <input type="text" class="form-input" id="notes" placeholder="أي تفاصيل إضافية">
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button class="submit-btn" id="submit-btn" onclick="submitBooking()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+      <span>تأكيد الحجز</span>
+    </button>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/>
+      </svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="/services.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="2"/>
+        <rect x="14" y="3" width="7" height="7" rx="2"/>
+        <rect x="3" y="14" width="7" height="7" rx="2"/>
+        <rect x="14" y="14" width="7" height="7" rx="2"/>
+      </svg>
+      <span>الخدمات</span>
+    </a>
+    <a href="/book.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span>احجز</span>
+    </a>
+    <a href="/track.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <span>تتبع</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { clinicsAPI, servicesAPI, appointmentsAPI } from '/js/api.js';
+    import { toast, sheet, haptic, loader, helpers } from '/js/ui.js';
+    import '/js/app.js';
+
+    let selectedClinic = null;
+    let clinics = [];
+
+    // Set min date = today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').min = today;
+    document.getElementById('date').value = today;
+
+    // Load clinics
+    async function loadClinics() {
+      const container = document.getElementById('clinic-pick');
+      try {
+        const data = await clinicsAPI.list();
+        clinics = data.data || [];
+
+        if (!clinics.length) {
+          container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray);">لا توجد عيادات</div>';
+          return;
+        }
+
+        // Check URL for ?clinic=id
+        const urlParams = new URLSearchParams(window.location.search);
+        const preClinic = urlParams.get('clinic');
+
+        container.innerHTML = clinics.map(c => `
+          <div class="clinic-option ${preClinic == c.id ? 'selected' : ''}" data-id="${c.id}" onclick="pickClinic(${c.id})">
+            <div class="clinic-option-icon">${getIcon(c.specialty)}</div>
+            <div style="flex:1;min-width:0;">
+              <div class="clinic-option-name">${helpers.escape(c.name)}</div>
+              <div class="clinic-option-desc">${helpers.escape(c.specialty || '')} • ${helpers.escape(c.address || '')}</div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:${preClinic == c.id ? 'var(--gold-dark)' : 'var(--gray-light)'};">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+        `).join('');
+
+        if (preClinic) pickClinic(parseInt(preClinic));
+      } catch (err) {
+        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray);">تعذّر تحميل العيادات</div>';
+      }
+    }
+
+    // Pick clinic
+    window.pickClinic = function(id) {
+      haptic.light();
+      selectedClinic = id;
+      document.querySelectorAll('.clinic-option').forEach(el => {
+        el.classList.toggle('selected', parseInt(el.dataset.id) === id);
+      });
+    };
+
+    // Load services
+    async function loadServices() {
+      const select = document.getElementById('service');
+      try {
+        const data = await servicesAPI.list();
+        const services = data.data || [];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const preService = urlParams.get('service');
+
+        select.innerHTML = '<option value="">اختر الخدمة...</option>' +
+          services.map(s => `
+            <option value="${s.id}" ${preService == s.id ? 'selected' : ''}>
+              ${s.icon || '⚕️'} ${s.name} — ${s.price_aed} AED
+            </option>
+          `).join('');
+      } catch (err) {
+        select.innerHTML = '<option value="">تعذّر التحميل</option>';
+      }
+    }
+
+    // Submit
+    window.submitBooking = async function() {
+      if (!selectedClinic) {
+        toast.error('اختر العيادة أولاً');
+        haptic.error();
+        return;
+      }
+
+      const service = document.getElementById('service').value;
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      const notes = document.getElementById('notes').value.trim();
+
+      if (!name || name.length < 3) {
+        toast.error('اكتب الاسم الكامل');
+        haptic.error();
+        return;
+      }
+      if (!phone || phone.length < 8) {
+        toast.error('اكتب رقم موبايل صحيح');
+        haptic.error();
+        return;
+      }
+      if (!date || !time) {
+        toast.error('اختر التاريخ والوقت');
+        haptic.error();
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      loader.show();
+
+      try {
+        const result = await appointmentsAPI.create({
+          clinic_id: selectedClinic,
+          service_id: service ? parseInt(service) : null,
+          customer_name: name,
+          customer_phone: phone,
+          appointment_date: date,
+          appointment_time: time,
+          notes: notes || null
+        });
+
+        loader.hide();
+        haptic.success();
+
+        // Success message
+        const content = document.createElement('div');
+        content.style.textAlign = 'center';
+        content.innerHTML = `
+          <div style="font-size:56px;margin-bottom:16px;">✅</div>
+          <p style="color:var(--gray);margin-bottom:8px;">تم الحجز بنجاح</p>
+          <div style="background:rgba(201,169,97,0.1);border-radius:16px;padding:16px;margin:16px 0;">
+            <div style="font-size:12px;color:var(--gray);margin-bottom:4px;">رقم الحجز</div>
+            <div style="font-size:28px;font-weight:900;color:var(--gold-dark);">#${result.appointment_id}</div>
+          </div>
+          <p style="font-size:13px;color:var(--gray);line-height:1.6;">
+            هنرسللك رسالة تأكيد على <strong dir="ltr">${phone}</strong>
+          </p>
+        `;
+
+        sheet.open({
+          title: '🎉 تم الحجز',
+          content,
+          actions: [
+            {
+              label: '📞 تواصل مع العيادة',
+              variant: 'btn-primary',
+              onClick: () => {
+                const clinic = clinics.find(c => c.id === selectedClinic);
+                if (clinic && clinic.phone) window.location.href = `tel:${clinic.phone}`;
+              },
+              close: true
+            },
+            {
+              label: '📋 عرض حجزي',
+              variant: 'btn-outline',
+              onClick: () => window.location.href = `/track.html?phone=${encodeURIComponent(phone)}`,
+              close: true
+            },
+            {
+              label: '🏠 الرئيسية',
+              variant: 'btn-ghost',
+              onClick: () => window.location.href = '/',
+              close: true
+            }
+          ]
+        });
+
+      } catch (err) {
+        loader.hide();
+        haptic.error();
+        toast.error(err.message || 'تعذّر إتمام الحجز');
+        btn.disabled = false;
+      }
+    };
+
+    function getIcon(specialty) {
+      if (!specialty) return '🏥';
+      if (specialty.includes('أسنان') || specialty.includes('اسنان')) return '🦷';
+      if (specialty.includes('جراح')) return '🔬';
+      return '🏥';
+    }
+
+    // Init
+    loadClinics();
+    loadServices();
+  </script>
+</body>
+</html>
