@@ -163,6 +163,16 @@
       color: #B91C1C;
       border: 1px solid rgba(239,68,68,0.18);
     }
+    .btn-call {
+      background: rgba(34,197,94,0.1);
+      color: #15803D;
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+    .btn-password {
+      background: rgba(245,158,11,0.1);
+      color: #B45309;
+      border: 1px solid rgba(245,158,11,0.2);
+    }
     .form-dialog {
       display: flex; flex-direction: column; gap: 14px;
     }
@@ -194,6 +204,62 @@
       background-repeat: no-repeat;
       background-position: left 12px center;
       padding-left: 40px;
+    }
+    .suggest-box {
+      background: rgba(201,169,97,0.08);
+      border: 1.5px dashed rgba(201,169,97,0.4);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 6px;
+    }
+    .suggest-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gold-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .suggest-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .suggest-label {
+      font-size: 11.5px;
+      color: var(--gray);
+      font-weight: 700;
+      min-width: 70px;
+    }
+    .suggest-value {
+      flex: 1;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(201,169,97,0.2);
+      direction: ltr;
+      text-align: left;
+      cursor: pointer;
+    }
+    .suggest-value:active {
+      background: rgba(201,169,97,0.1);
+    }
+    .suggest-copy {
+      padding: 6px 10px;
+      background: var(--gold);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .suggest-copy:active {
+      transform: scale(0.95);
     }
     .logout-btn {
       width: 100%;
@@ -256,9 +322,12 @@
   <section class="admin-area">
     <div class="admin-tabs">
       <button class="admin-tab active" data-tab="clinics">🏥 العيادات</button>
+      <button class="admin-tab" data-tab="doctors">👨‍⚕️ الأطباء</button>
       <button class="admin-tab" data-tab="services">📋 الخدمات</button>
+      <button class="admin-tab" data-tab="appointments">📅 الحجوزات</button>
     </div>
 
+    <!-- CLINICS TAB -->
     <div class="tab-content active" id="tab-clinics">
       <div class="section-head">
         <div class="section-head-title">🏥 إدارة العيادات</div>
@@ -273,6 +342,22 @@
       <div id="clinics-list"></div>
     </div>
 
+    <!-- DOCTORS TAB -->
+    <div class="tab-content" id="tab-doctors">
+      <div class="section-head">
+        <div class="section-head-title">👨‍⚕️ إدارة الأطباء</div>
+        <button class="add-btn" onclick="showDoctorForm()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          إضافة
+        </button>
+      </div>
+      <div id="doctors-list"></div>
+    </div>
+
+    <!-- SERVICES TAB -->
     <div class="tab-content" id="tab-services">
       <div class="section-head">
         <div class="section-head-title">📋 إدارة الخدمات</div>
@@ -287,6 +372,14 @@
       <div id="services-list"></div>
     </div>
 
+    <!-- APPOINTMENTS TAB -->
+    <div class="tab-content" id="tab-appointments">
+      <div class="section-head">
+        <div class="section-head-title">📅 كل الحجوزات</div>
+      </div>
+      <div id="appointments-list"></div>
+    </div>
+
     <button class="logout-btn" onclick="logout()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
@@ -294,7 +387,6 @@
       تسجيل الخروج
     </button>
   </section>
-
   <script type="module">
     import { auth, authAPI, clinicsAPI, servicesAPI } from '/js/api.js';
     import { toast, haptic, loader, sheet, helpers } from '/js/ui.js';
@@ -323,13 +415,17 @@
           setAdminName();
           setupTabs();
           loadClinics();
+          loadDoctors();
           loadServices();
+          loadAppointments();
         });
       } else {
         setAdminName();
         setupTabs();
         loadClinics();
+        loadDoctors();
         loadServices();
+        loadAppointments();
       }
     }
 
@@ -365,6 +461,83 @@
         throw new Error(data.error || 'فشل الطلب');
       }
       return data;
+    }
+
+    // ============ UTILS ============
+    function getClinicIcon(s) {
+      if (!s) return '🏥';
+      if (s.includes('أسنان') || s.includes('اسنان')) return '🦷';
+      if (s.includes('جراح')) return '🔬';
+      if (s.includes('جلد')) return '✨';
+      if (s.includes('أطفال') || s.includes('اطفال')) return '👶';
+      if (s.includes('عيون') || s.includes('عين')) return '👁️';
+      if (s.includes('قلب')) return '🫀';
+      if (s.includes('مخ') || s.includes('أعصاب')) return '🧠';
+      if (s.includes('عظام')) return '🦴';
+      return '🏥';
+    }
+
+    // Generate username from Arabic name
+    function generateUsername(arabicName, specialty) {
+      // English transliteration map for common Arabic letters
+      const map = {
+        'أ': 'a', 'ا': 'a', 'إ': 'e', 'ب': 'b', 'ت': 't', 'ث': 'th',
+        'ج': 'g', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'z', 'ر': 'r',
+        'ز': 'z', 'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't',
+        'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k',
+        'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'w', 'ي': 'y',
+        'ى': 'a', 'ة': 'a', 'ء': 'a', 'ئ': 'e', 'ؤ': 'o'
+      };
+      
+      // Remove "د." and spaces
+      let name = arabicName.replace(/^د\.\s*/, '').trim();
+      
+      // Transliterate
+      let result = '';
+      for (const char of name) {
+        if (char === ' ') continue;
+        result += map[char] || '';
+      }
+      
+      // If empty, use specialty-based
+      if (!result) {
+        const specialtyMap = {
+          'أسنان': 'dental', 'جراحة': 'surgery', 'جلدية': 'derma',
+          'أطفال': 'kids', 'باطنة': 'internal', 'عظام': 'ortho',
+          'عيون': 'eyes', 'قلب': 'cardio', 'مخ وأعصاب': 'neuro',
+          'أنف وأذن': 'ent', 'نساء وتوليد': 'gyno', 'مسالك': 'urology'
+        };
+        result = specialtyMap[specialty] || 'doctor';
+      }
+      
+      return result.toLowerCase();
+    }
+
+    function generateSuggestions(doctorName, specialty) {
+      const username = generateUsername(doctorName, specialty);
+      const email = `dr.${username}@clinic.com`;
+      // Capitalize first letter of username for password
+      const cap = username.charAt(0).toUpperCase() + username.slice(1);
+      const password = `${cap}@2026`;
+      return { email, password, username };
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          toast.success('✅ تم النسخ');
+          haptic.light();
+        }).catch(() => {});
+      } else {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        toast.success('✅ تم النسخ');
+      }
     }
 
     // ============ CLINICS ============
@@ -409,15 +582,6 @@
       }
     }
 
-    function getClinicIcon(s) {
-      if (!s) return '🏥';
-      if (s.includes('أسنان') || s.includes('اسنان')) return '🦷';
-      if (s.includes('جراح')) return '🔬';
-      if (s.includes('جلد')) return '✨';
-      if (s.includes('أطفال') || s.includes('اطفال')) return '👶';
-      return '🏥';
-    }
-
     window.showClinicForm = function(clinic = null) {
       const isEdit = !!clinic;
       const content = document.createElement('div');
@@ -429,17 +593,20 @@
         </div>
         <div class="form-group">
           <label class="form-label">اسم الطبيب <span class="req">*</span></label>
-          <input class="form-input" id="f-doctor" value="${clinic ? helpers.escape(clinic.doctor_name || '') : ''}" placeholder="مثال: د. أحمد محمد">
+          <input class="form-input" id="f-doctor" value="${clinic ? helpers.escape(clinic.doctor_name || '') : ''}" placeholder="مثال: د. أحمد محمد" oninput="updateSuggestions()">
         </div>
         <div class="form-group">
           <label class="form-label">التخصص</label>
-          <select class="form-select" id="f-specialty">
+          <select class="form-select" id="f-specialty" onchange="updateSuggestions()">
             <option value="أسنان" ${clinic?.specialty === 'أسنان' ? 'selected' : ''}>🦷 أسنان</option>
             <option value="جراحة" ${clinic?.specialty === 'جراحة' ? 'selected' : ''}>🔬 جراحة</option>
             <option value="جلدية" ${clinic?.specialty === 'جلدية' ? 'selected' : ''}>✨ جلدية</option>
             <option value="أطفال" ${clinic?.specialty === 'أطفال' ? 'selected' : ''}>👶 أطفال</option>
             <option value="باطنة" ${clinic?.specialty === 'باطنة' ? 'selected' : ''}>💊 باطنة</option>
             <option value="عظام" ${clinic?.specialty === 'عظام' ? 'selected' : ''}>🦴 عظام</option>
+            <option value="عيون" ${clinic?.specialty === 'عيون' ? 'selected' : ''}>👁️ عيون</option>
+            <option value="قلب" ${clinic?.specialty === 'قلب' ? 'selected' : ''}>🫀 قلب</option>
+            <option value="مخ وأعصاب" ${clinic?.specialty === 'مخ وأعصاب' ? 'selected' : ''}>🧠 مخ وأعصاب</option>
           </select>
         </div>
         <div class="form-group">
@@ -458,10 +625,9 @@
           <label class="form-label">مواعيد العمل</label>
           <input class="form-input" id="f-hours" value="${clinic ? helpers.escape(clinic.working_hours || '') : ''}" placeholder="مثال: 9ص - 9م">
         </div>
-        <div class="form-group">
-          <label class="form-label">البريد الإلكتروني</label>
-          <input class="form-input" id="f-email" dir="ltr" type="email" value="${clinic ? helpers.escape(clinic.email || '') : ''}" placeholder="clinic@example.com">
-        </div>
+        ${!isEdit ? `
+          <div id="suggestions-container"></div>
+        ` : ''}
       `;
 
       sheet.open({
@@ -479,8 +645,7 @@
                 phone: document.getElementById('f-phone').value.trim(),
                 whatsapp: document.getElementById('f-whatsapp').value.trim() || document.getElementById('f-phone').value.trim(),
                 address: document.getElementById('f-address').value.trim(),
-                working_hours: document.getElementById('f-hours').value.trim(),
-                email: document.getElementById('f-email').value.trim()
+                working_hours: document.getElementById('f-hours').value.trim()
               };
 
               if (!payload.name || !payload.doctor_name) {
@@ -513,7 +678,48 @@
           { label: 'إلغاء', variant: 'btn-ghost', onClick: () => {} }
         ]
       });
+
+      // Update suggestions if not edit
+      if (!isEdit) {
+        setTimeout(() => updateSuggestions(), 100);
+      }
     };
+
+    window.updateSuggestions = function() {
+      const container = document.getElementById('suggestions-container');
+      if (!container) return;
+      
+      const doctorName = document.getElementById('f-doctor')?.value.trim();
+      const specialty = document.getElementById('f-specialty')?.value;
+      
+      if (!doctorName || doctorName.length < 3) {
+        container.innerHTML = '';
+        return;
+      }
+
+      const { email, password } = generateSuggestions(doctorName, specialty);
+      
+      container.innerHTML = `
+        <div class="suggest-box">
+          <div class="suggest-title">💡 اقتراح تلقائي لحساب الطبيب</div>
+          <div class="suggest-row">
+            <span class="suggest-label">الإيميل:</span>
+            <span class="suggest-value" onclick="copyToClipboard('${email}')">${email}</span>
+            <button class="suggest-copy" onclick="copyToClipboard('${email}')">📋</button>
+          </div>
+          <div class="suggest-row">
+            <span class="suggest-label">الباسورد:</span>
+            <span class="suggest-value" onclick="copyToClipboard('${password}')">${password}</span>
+            <button class="suggest-copy" onclick="copyToClipboard('${password}')">📋</button>
+          </div>
+          <div style="font-size: 11px; color: var(--gray); margin-top: 8px; line-height: 1.5;">
+            ⚠️ احفظ البيانات دي — هتحتاجها لما تضيف الطبيب
+          </div>
+        </div>
+      `;
+    };
+
+    window.copyToClipboard = copyToClipboard;
 
     window.editClinic = function(id) {
       const clinic = clinics.find(c => c.id === id);
@@ -541,6 +747,222 @@
         loader.hide();
         toast.error(err.message || 'تعذّر الحذف');
       }
+    };
+
+    // ============ DOCTORS ============
+    let doctors = [];
+
+    async function loadDoctors() {
+      const c = document.getElementById('doctors-list');
+      if (!c) return;
+      c.innerHTML = '<div class="skeleton skeleton-card" style="height:120px;"></div>';
+      try {
+        const data = await adminRequest('/api/admin/doctors');
+        doctors = data.data || [];
+
+        if (!doctors.length) {
+          c.innerHTML = '<div class="empty"><div class="empty-icon">👨‍⚕️</div><div class="empty-title">لا يوجد أطباء</div></div>';
+          return;
+        }
+
+        c.innerHTML = doctors.map(d => `
+          <div class="item-card">
+            <div class="item-top">
+              <div class="item-icon">👨‍⚕️</div>
+              <div class="item-body">
+                <div class="item-title">${helpers.escape(d.full_name)}</div>
+                <div class="item-sub">
+                  📧 <span dir="ltr">${helpers.escape(d.email)}</span>
+                  ${d.clinic_name ? `<br>🏥 ${helpers.escape(d.clinic_name)}` : ''}
+                  ${d.specialty ? `<br>🎯 ${helpers.escape(d.specialty)}` : ''}
+                  ${d.phone ? `<br>📞 <span dir="ltr">${helpers.escape(d.phone)}</span>` : ''}
+                </div>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="item-btn btn-password" onclick="changePassword(${d.id}, '${helpers.escape(d.full_name)}')">
+                🔑 تغيير الباسورد
+              </button>
+              <button class="item-btn btn-call" onclick="window.location.href='tel:${d.phone || ''}'">
+                📞 اتصال
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
+      }
+    }
+
+    window.showDoctorForm = function() {
+      if (!clinics.length) {
+        toast.error('أضف عيادة أولاً');
+        return;
+      }
+
+      const content = document.createElement('div');
+      content.className = 'form-dialog';
+      content.innerHTML = `
+        <div class="form-group">
+          <label class="form-label">اسم الطبيب <span class="req">*</span></label>
+          <input class="form-input" id="d-name" placeholder="مثال: د. أحمد محمد" oninput="updateDoctorSuggestions()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">العيادة <span class="req">*</span></label>
+          <select class="form-select" id="d-clinic" onchange="updateDoctorSuggestions()">
+            <option value="">اختر العيادة...</option>
+            ${clinics.map(c => `<option value="${c.id}" data-specialty="${c.specialty}">${helpers.escape(c.name)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الإيميل <span class="req">*</span></label>
+          <input class="form-input" id="d-email" dir="ltr" type="email" placeholder="dr.ahmed@clinic.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الباسورد <span class="req">*</span></label>
+          <input class="form-input" id="d-password" dir="ltr" placeholder="Ahmed@2026">
+        </div>
+        <div class="form-group">
+          <label class="form-label">رقم الموبايل</label>
+          <input class="form-input" id="d-phone" dir="ltr" placeholder="+971...">
+        </div>
+        <div id="doctor-suggestions"></div>
+      `;
+
+      sheet.open({
+        title: '➕ إضافة طبيب',
+        content,
+        actions: [
+          {
+            label: '➕ إضافة الطبيب',
+            variant: 'btn-primary',
+            onClick: async () => {
+              const payload = {
+                full_name: document.getElementById('d-name').value.trim(),
+                clinic_id: parseInt(document.getElementById('d-clinic').value) || null,
+                email: document.getElementById('d-email').value.trim(),
+                password: document.getElementById('d-password').value,
+                phone: document.getElementById('d-phone').value.trim()
+              };
+
+              if (!payload.full_name || !payload.email || !payload.password) {
+                toast.error('الاسم والإيميل والباسورد مطلوبين');
+                haptic.error();
+                return false;
+              }
+              if (payload.password.length < 6) {
+                toast.error('الباسورد لازم 6 أحرف على الأقل');
+                haptic.error();
+                return false;
+              }
+
+              loader.show();
+              try {
+                await adminRequest('/api/admin/doctors', { method: 'POST', body: payload });
+                loader.hide();
+                haptic.success();
+                toast.success('✅ تم إضافة الطبيب');
+                await loadDoctors();
+              } catch (err) {
+                loader.hide();
+                haptic.error();
+                toast.error(err.message || 'حدث خطأ');
+                return false;
+              }
+              return true;
+            }
+          },
+          { label: 'إلغاء', variant: 'btn-ghost', onClick: () => {} }
+        ]
+      });
+
+      setTimeout(() => updateDoctorSuggestions(), 100);
+    };
+
+    window.updateDoctorSuggestions = function() {
+      const container = document.getElementById('doctor-suggestions');
+      if (!container) return;
+
+      const name = document.getElementById('d-name')?.value.trim();
+      const clinicId = document.getElementById('d-clinic')?.value;
+      const clinicSelect = document.getElementById('d-clinic');
+      const specialty = clinicSelect?.selectedOptions[0]?.dataset?.specialty;
+
+      if (!name || name.length < 3) {
+        container.innerHTML = '';
+        return;
+      }
+
+      const { email, password } = generateSuggestions(name, specialty || '');
+      
+      // Auto-fill if empty
+      const emailField = document.getElementById('d-email');
+      const passField = document.getElementById('d-password');
+      if (emailField && !emailField.value) emailField.value = email;
+      if (passField && !passField.value) passField.value = password;
+
+      container.innerHTML = `
+        <div class="suggest-box">
+          <div class="suggest-title">💡 الاقتراح المطبّق</div>
+          <div style="font-size: 11.5px; color: var(--gray); line-height: 1.6;">
+            📧 <span dir="ltr">${email}</span><br>
+            🔐 <span dir="ltr">${password}</span>
+          </div>
+        </div>
+      `;
+    };
+
+    window.changePassword = async function(userId, userName) {
+      const content = document.createElement('div');
+      content.className = 'form-dialog';
+      content.innerHTML = `
+        <div style="text-align: center; margin-bottom: 8px;">
+          <div style="font-size: 13px; color: var(--gray);">تغيير باسورد</div>
+          <div style="font-size: 15px; font-weight: 800; color: #000; margin-top: 4px;">${helpers.escape(userName)}</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الباسورد الجديد <span class="req">*</span></label>
+          <input class="form-input" id="np" dir="ltr" type="text" placeholder="NewPassword@2026">
+        </div>
+        <div style="font-size: 11.5px; color: var(--gray); line-height: 1.5;">
+          ⚠️ احفظ الباسورد الجديد — مش هيظهر تاني
+        </div>
+      `;
+
+      sheet.open({
+        title: '🔑 تغيير باسورد',
+        content,
+        actions: [
+          {
+            label: '💾 حفظ',
+            variant: 'btn-primary',
+            onClick: async () => {
+              const newPass = document.getElementById('np').value;
+              if (!newPass || newPass.length < 6) {
+                toast.error('الباسورد لازم 6 أحرف على الأقل');
+                return false;
+              }
+
+              loader.show();
+              try {
+                await adminRequest('/api/admin/doctors/password', {
+                  method: 'POST',
+                  body: { user_id: userId, new_password: newPass }
+                });
+                loader.hide();
+                haptic.success();
+                toast.success('✅ تم تغيير الباسورد');
+              } catch (err) {
+                loader.hide();
+                toast.error(err.message || 'حدث خطأ');
+                return false;
+              }
+              return true;
+            }
+          },
+          { label: 'إلغاء', variant: 'btn-ghost', onClick: () => {} }
+        ]
+      });
     };
 
     // ============ SERVICES ============
@@ -694,6 +1116,86 @@
         haptic.success();
         toast.success('✅ تم حذف الخدمة');
         await loadServices();
+      } catch (err) {
+        loader.hide();
+        toast.error(err.message || 'تعذّر الحذف');
+      }
+    };
+
+    // ============ APPOINTMENTS ============
+    async function loadAppointments() {
+      const c = document.getElementById('appointments-list');
+      if (!c) return;
+      c.innerHTML = '<div class="skeleton skeleton-card" style="height:100px;"></div>';
+      try {
+        const data = await adminRequest('/api/admin/appointments');
+        const appts = data.data || [];
+        const qsAppts = document.getElementById('qs-appts');
+        if (qsAppts) qsAppts.textContent = appts.length;
+
+        if (!appts.length) {
+          c.innerHTML = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">لا توجد حجوزات</div></div>';
+          return;
+        }
+
+        const statusMap = {
+          pending: { text: '⏳ قيد الانتظار', color: '#B45309', bg: 'rgba(245,158,11,0.15)' },
+          confirmed: { text: '✅ مؤكد', color: '#15803D', bg: 'rgba(34,197,94,0.15)' },
+          completed: { text: '🎉 مكتمل', color: '#1D4ED8', bg: 'rgba(59,130,246,0.15)' },
+          cancelled: { text: '❌ ملغي', color: '#B91C1C', bg: 'rgba(239,68,68,0.12)' }
+        };
+
+        c.innerHTML = appts.map(a => {
+          const st = statusMap[a.status] || statusMap.pending;
+          return `
+            <div class="item-card">
+              <div class="item-top">
+                <div class="item-icon">${a.service_icon || '📋'}</div>
+                <div class="item-body">
+                  <div class="item-title">${helpers.escape(a.customer_name)}</div>
+                  <div class="item-sub">
+                    🏥 ${helpers.escape(a.clinic_name || '')}
+                    ${a.service_name ? `<br>📋 ${helpers.escape(a.service_name)}` : ''}
+                    <br>📅 ${helpers.formatDate(a.appointment_date)} — ${a.appointment_time}
+                    <br>📞 <span dir="ltr">${helpers.escape(a.customer_phone)}</span>
+                    ${a.notes ? `<br>📝 ${helpers.escape(a.notes)}` : ''}
+                  </div>
+                </div>
+              </div>
+              <div style="padding-top: 8px;">
+                <span style="padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: ${st.bg}; color: ${st.color};">
+                  ${st.text}
+                </span>
+              </div>
+              <div class="item-actions" style="margin-top: 12px;">
+                <button class="item-btn btn-call" onclick="window.location.href='tel:${a.customer_phone}'">📞 اتصال</button>
+                <button class="item-btn btn-delete" onclick="deleteAppointment(${a.id})">🗑️ حذف</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
+      }
+    }
+
+    window.deleteAppointment = async function(id) {
+      const ok = await sheet.confirm({
+        title: 'حذف الحجز؟',
+        message: 'هل أنت متأكد من حذف هذا الحجز؟',
+        confirmText: 'حذف',
+        cancelText: 'إلغاء',
+        variant: 'btn-dark'
+      });
+      if (!ok) return;
+
+      loader.show();
+      try {
+        await adminRequest(`/api/admin/appointments/${id}`, { method: 'DELETE' });
+        loader.hide();
+        haptic.success();
+        toast.success('✅ تم حذف الحجز');
+        await loadAppointments();
       } catch (err) {
         loader.hide();
         toast.error(err.message || 'تعذّر الحذف');
