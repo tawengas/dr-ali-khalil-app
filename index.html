@@ -11,20 +11,16 @@
   
   <title>النخبة الطبية</title>
   
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" href="/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   
-  <!-- Styles -->
   <link rel="stylesheet" href="/css/app.css">
   
-  <!-- Extra styles for homepage -->
   <style>
     /* ============ HERO ============ */
     .hero {
@@ -39,68 +35,51 @@
       overflow: hidden;
       text-align: center;
     }
-    
     .hero::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
+      top: -50%; right: -50%;
+      width: 200%; height: 200%;
       background: 
         radial-gradient(circle at 30% 20%, rgba(201, 169, 97, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 70% 80%, rgba(201, 169, 97, 0.1) 0%, transparent 50%);
       animation: floatBg 20s ease-in-out infinite;
     }
-    
     @keyframes floatBg {
       0%, 100% { transform: translate(0, 0) rotate(0deg); }
       50% { transform: translate(-30px, -30px) rotate(5deg); }
     }
-    
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 16px;
       background: rgba(201, 169, 97, 0.12);
       border: 1px solid rgba(201, 169, 97, 0.3);
       border-radius: var(--r-full);
       color: var(--gold-light);
-      font-size: 12.5px;
-      font-weight: 600;
+      font-size: 12.5px; font-weight: 600;
       margin-bottom: 24px;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       animation: fadeInUp 0.8s ease;
     }
-    
     .hero-badge-dot {
-      width: 7px;
-      height: 7px;
+      width: 7px; height: 7px;
       background: var(--gold);
       border-radius: 50%;
       animation: pulse 2s ease infinite;
       box-shadow: 0 0 12px var(--gold);
     }
-    
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.6; transform: scale(1.3); }
     }
-    
     .hero-title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: var(--white);
-      line-height: 1.15;
+      font-size: 2.5rem; font-weight: 900;
+      color: var(--white); line-height: 1.15;
       margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       letter-spacing: -0.03em;
       animation: fadeInUp 0.8s ease 0.1s both;
     }
-    
     .hero-title span {
       background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
       -webkit-background-clip: text;
@@ -108,100 +87,70 @@
       background-clip: text;
       display: inline-block;
     }
-    
     .hero-subtitle {
       font-size: 15px;
       color: rgba(255, 255, 255, 0.65);
       max-width: 400px;
       margin: 0 auto 32px;
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       animation: fadeInUp 0.8s ease 0.2s both;
       line-height: 1.7;
     }
-    
     .hero-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 340px;
-      position: relative;
-      z-index: 1;
+      display: flex; flex-direction: column; gap: 12px;
+      width: 100%; max-width: 340px;
+      position: relative; z-index: 1;
       animation: fadeInUp 0.8s ease 0.3s both;
     }
-    
     .hero-cta {
       padding: 17px 32px;
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: var(--black);
-      font-weight: 800;
-      font-size: 16px;
+      color: var(--black); font-weight: 800; font-size: 16px;
       border-radius: var(--r-lg);
       box-shadow: var(--shadow-gold);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-flex; align-items: center; justify-content: center;
       gap: 10px;
       transition: all var(--t-base);
       text-decoration: none;
-      border: none;
-      cursor: pointer;
+      border: none; cursor: pointer;
       font-family: inherit;
     }
-    
     .hero-cta:active {
       transform: scale(0.97);
       box-shadow: 0 4px 16px rgba(201, 169, 97, 0.4);
     }
-    
-    .hero-cta svg {
-      transition: transform 0.3s ease;
-    }
-    
-    .hero-cta:active svg {
-      transform: translateX(-4px);
-    }
-    
+    .hero-cta svg { transition: transform 0.3s ease; }
+    .hero-cta:active svg { transform: translateX(-4px); }
     .hero-secondary {
       padding: 15px 32px;
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(10px);
       color: var(--white);
-      font-weight: 700;
-      font-size: 15px;
+      font-weight: 700; font-size: 15px;
       border-radius: var(--r-lg);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-flex; align-items: center; justify-content: center;
       gap: 8px;
       text-decoration: none;
       transition: all var(--t-fast);
     }
-    
     .hero-secondary:active {
       background: rgba(255, 255, 255, 0.15);
       transform: scale(0.97);
     }
-    
     .hero-install {
       padding: 12px 24px;
       background: transparent;
       color: var(--gold);
-      font-weight: 700;
-      font-size: 14px;
+      font-weight: 700; font-size: 14px;
       border-radius: var(--r-md);
       border: 1.5px dashed rgba(201, 169, 97, 0.4);
-      display: none;
-      align-items: center;
-      justify-content: center;
+      display: none; align-items: center; justify-content: center;
       gap: 8px;
       cursor: pointer;
       font-family: inherit;
       transition: all var(--t-fast);
     }
-    
     .hero-install:active {
       background: rgba(201, 169, 97, 0.1);
       transform: scale(0.97);
@@ -211,10 +160,8 @@
     .stats-section {
       padding: 0;
       margin: -40px 20px 0;
-      position: relative;
-      z-index: 2;
+      position: relative; z-index: 2;
     }
-    
     .stats-card {
       background: var(--white);
       border-radius: var(--r-xl);
@@ -226,31 +173,23 @@
       animation: fadeInUp 0.8s ease 0.5s both;
       border: 1px solid rgba(0, 0, 0, 0.04);
     }
-    
     .stat-item {
       text-align: center;
       position: relative;
     }
-    
     .stat-item:not(:last-child)::after {
       content: '';
       position: absolute;
-      left: 0;
-      top: 20%;
-      height: 60%;
-      width: 1px;
+      left: 0; top: 20%;
+      height: 60%; width: 1px;
       background: var(--gray-light);
     }
-    
     .stat-value {
-      font-size: 1.5rem;
-      font-weight: 900;
+      font-size: 1.5rem; font-weight: 900;
       color: var(--gold-dark);
-      display: block;
-      line-height: 1.1;
+      display: block; line-height: 1.1;
       letter-spacing: -0.02em;
     }
-    
     .stat-label {
       font-size: 11px;
       color: var(--gray);
@@ -259,10 +198,7 @@
     }
     
     /* ============ CLINIC CARDS ============ */
-    .clinics-section {
-      padding: 60px 20px 40px;
-    }
-    
+    .clinics-section { padding: 60px 20px 40px; }
     .clinic-card {
       background: var(--white);
       border: 1px solid rgba(0, 0, 0, 0.06);
@@ -274,148 +210,102 @@
       overflow: hidden;
       margin-bottom: 16px;
     }
-    
     .clinic-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 4px;
-      height: 100%;
+      top: 0; right: 0;
+      width: 4px; height: 100%;
       background: linear-gradient(180deg, var(--gold), var(--gold-dark));
     }
-    
     .clinic-card:active {
       transform: scale(0.985);
       box-shadow: var(--shadow-md);
     }
-    
     .clinic-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 16px;
+      display: flex; align-items: flex-start;
+      gap: 14px; margin-bottom: 16px;
     }
-    
     .clinic-icon {
-      width: 56px;
-      height: 56px;
+      width: 56px; height: 56px;
       border-radius: 16px;
       background: linear-gradient(135deg, rgba(201, 169, 97, 0.15), rgba(201, 169, 97, 0.05));
       border: 1px solid rgba(201, 169, 97, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; flex-shrink: 0;
     }
-    
-    .clinic-info {
-      flex: 1;
-      min-width: 0;
-    }
-    
+    .clinic-info { flex: 1; min-width: 0; }
     .clinic-name {
-      font-size: 17px;
-      font-weight: 800;
+      font-size: 17px; font-weight: 800;
       color: var(--black);
       margin-bottom: 4px;
       letter-spacing: -0.01em;
     }
-    
     .clinic-specialty {
       display: inline-block;
       padding: 3px 10px;
       background: rgba(201, 169, 97, 0.1);
       color: var(--gold-dark);
       border-radius: var(--r-full);
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 11.5px; font-weight: 700;
     }
-    
     .clinic-details {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: flex; flex-direction: column; gap: 8px;
       margin-bottom: 16px;
       padding-bottom: 16px;
       border-bottom: 1px solid var(--gray-light);
     }
-    
     .clinic-detail {
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       gap: 10px;
       font-size: 13px;
       color: var(--gray);
     }
-    
     .clinic-detail-icon {
-      width: 28px;
-      height: 28px;
+      width: 28px; height: 28px;
       border-radius: 8px;
       background: var(--gray-lighter);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
     }
-    
     .clinic-detail-text {
       color: var(--black);
       font-weight: 600;
       font-size: 13px;
     }
-    
     .clinic-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-    
-    .clinic-actions .full-width {
-      grid-column: 1 / -1;
-    }
-    
+    .clinic-actions .full-width { grid-column: 1 / -1; }
     .action-btn {
       padding: 12px;
       border-radius: var(--r-md);
       font-family: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 13px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
       gap: 6px;
       text-decoration: none;
       transition: all var(--t-fast);
       cursor: pointer;
       border: none;
     }
-    
-    .action-btn:active {
-      transform: scale(0.96);
-    }
-    
+    .action-btn:active { transform: scale(0.96); }
     .action-call {
       background: rgba(34, 197, 94, 0.1);
       color: #15803D;
       border: 1px solid rgba(34, 197, 94, 0.2);
     }
-    
     .action-whatsapp {
       background: rgba(37, 211, 102, 0.1);
       color: #128C7E;
       border: 1px solid rgba(37, 211, 102, 0.2);
     }
-    
     .action-book {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       color: var(--black);
       box-shadow: 0 4px 12px rgba(201, 169, 97, 0.25);
-      padding: 14px;
-      font-size: 14px;
+      padding: 14px; font-size: 14px;
     }
     
     /* ============ SERVICES ============ */
@@ -423,18 +313,13 @@
       padding: 40px 0 60px;
       background: linear-gradient(180deg, var(--white) 0%, var(--white-soft) 100%);
     }
-    
-    .services-container {
-      padding: 0 20px;
-    }
-    
+    .services-container { padding: 0 20px; }
     .services-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       margin-bottom: 24px;
     }
-    
     .service-card {
       background: var(--white);
       border: 1px solid rgba(0, 0, 0, 0.06);
@@ -446,40 +331,29 @@
       position: relative;
       overflow: hidden;
     }
-    
     .service-card:active {
       transform: scale(0.97);
       border-color: var(--gold);
       box-shadow: 0 8px 20px rgba(201, 169, 97, 0.15);
     }
-    
     .service-icon {
-      font-size: 30px;
-      margin-bottom: 10px;
-      display: block;
-      line-height: 1;
+      font-size: 30px; margin-bottom: 10px;
+      display: block; line-height: 1;
     }
-    
     .service-name {
-      font-size: 13px;
-      font-weight: 800;
+      font-size: 13px; font-weight: 800;
       color: var(--black);
       margin-bottom: 6px;
       line-height: 1.3;
       min-height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       letter-spacing: -0.01em;
     }
-    
     .service-price {
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 14px; font-weight: 800;
       color: var(--gold-dark);
       letter-spacing: -0.01em;
     }
-    
     .service-price small {
       font-size: 10px;
       opacity: 0.7;
@@ -487,35 +361,23 @@
     }
     
     /* ============ CTA ============ */
-    .cta-section {
-      padding: 60px 20px;
-      text-align: center;
-    }
-    
+    .cta-section { padding: 60px 20px; text-align: center; }
     .cta-title {
-      font-size: 1.5rem;
-      font-weight: 900;
+      font-size: 1.5rem; font-weight: 900;
       color: var(--black);
       margin-bottom: 12px;
       letter-spacing: -0.02em;
     }
-    
     .cta-text {
-      color: var(--gray);
-      font-size: 14px;
+      color: var(--gray); font-size: 14px;
       margin-bottom: 24px;
       max-width: 340px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-left: auto; margin-right: auto;
       line-height: 1.6;
     }
-    
     .login-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 320px;
-      margin: 0 auto;
+      display: flex; flex-direction: column;
+      gap: 10px; max-width: 320px; margin: 0 auto;
     }
     
     /* ============ FOOTER ============ */
@@ -526,46 +388,106 @@
       text-align: center;
       font-size: 13px;
     }
-    
     .footer-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      display: inline-flex; align-items: center;
+      gap: 10px; margin-bottom: 12px;
     }
-    
     .footer-logo-icon {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 10px;
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 18px;
     }
-    
     .footer-title {
       color: var(--gold);
       font-weight: 800;
       font-size: 15px;
     }
-    
     .footer-title span { color: var(--white); }
-    
     .footer-text {
       margin-top: 8px;
       opacity: 0.7;
       font-size: 12.5px;
       line-height: 1.6;
     }
-    
     .footer-copy {
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid rgba(201, 169, 97, 0.15);
       font-size: 11.5px;
       opacity: 0.5;
+    }
+    
+    /* ============ SPONSOR ============ */
+    .footer-sponsor {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(201, 169, 97, 0.15);
+    }
+    .footer-sponsor-label {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+    .footer-sponsor-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(201, 169, 97, 0.2);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .footer-sponsor-card:active {
+      background: rgba(201, 169, 97, 0.08);
+      border-color: rgba(201, 169, 97, 0.4);
+      transform: scale(0.98);
+    }
+    .footer-sponsor-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--black);
+      font-size: 20px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
+    }
+    .footer-sponsor-info {
+      flex: 1;
+      text-align: right;
+      min-width: 0;
+    }
+    .footer-sponsor-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 2px;
+    }
+    .footer-sponsor-name span { color: var(--gold); }
+    .footer-sponsor-desc {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.4;
+    }
+    .footer-sponsor-arrow {
+      color: var(--gold);
+      flex-shrink: 0;
+      opacity: 0.7;
     }
     
     /* ============ RESPONSIVE ============ */
@@ -579,7 +501,6 @@
 </head>
 <body>
 
-  <!-- ============ HEADER ============ -->
   <header class="app-header dark">
     <a href="/" class="app-header-logo">
       <div class="app-header-logo-icon">🏥</div>
@@ -594,7 +515,6 @@
     </button>
   </header>
 
-  <!-- ============ HERO ============ -->
   <section class="hero">
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
@@ -630,7 +550,6 @@
     </div>
   </section>
 
-  <!-- ============ STATS ============ -->
   <section class="stats-section fade-in">
     <div class="stats-card">
       <div class="stat-item">
@@ -648,7 +567,6 @@
     </div>
   </section>
 
-  <!-- ============ CLINICS ============ -->
   <section class="clinics-section">
     <div class="section-header fade-in">
       <span class="section-tag">OUR CLINICS</span>
@@ -657,7 +575,6 @@
     </div>
     
     <div id="clinics-container">
-      <!-- Skeleton loader -->
       <div class="clinic-card">
         <div class="clinic-header">
           <div class="skeleton" style="width: 56px; height: 56px; border-radius: 16px;"></div>
@@ -672,7 +589,6 @@
     </div>
   </section>
 
-  <!-- ============ SERVICES ============ -->
   <section class="services-section">
     <div class="services-container">
       <div class="section-header fade-in">
@@ -682,7 +598,6 @@
       </div>
       
       <div class="services-grid fade-in" id="services-preview">
-        <!-- Skeleton -->
         <div class="service-card">
           <div class="skeleton" style="width: 40px; height: 40px; border-radius: 12px; margin: 0 auto 12px;"></div>
           <div class="skeleton skeleton-text" style="width: 80%; margin: 0 auto 6px;"></div>
@@ -716,7 +631,6 @@
     </div>
   </section>
 
-  <!-- ============ CTA ============ -->
   <section class="cta-section fade-in">
     <h2 class="cta-title">هل أنت طبيب أو مسؤول؟</h2>
     <p class="cta-text">ادخل إلى لوحة التحكم لإدارة المواعيد والعيادات</p>
@@ -731,17 +645,30 @@
     </div>
   </section>
 
-  <!-- ============ FOOTER ============ -->
   <footer class="app-footer">
     <div class="footer-logo">
       <div class="footer-logo-icon">🏥</div>
       <div class="footer-title">النخبة <span>الطبية</span></div>
     </div>
     <div class="footer-text">رعاية طبية بمعايير عالمية</div>
+    
+    <div class="footer-sponsor">
+      <div class="footer-sponsor-label">✨ برعاية</div>
+      <a href="https://www.omedia-agency.com/" target="_blank" rel="noopener noreferrer" class="footer-sponsor-card">
+        <div class="footer-sponsor-icon">O</div>
+        <div class="footer-sponsor-info">
+          <div class="footer-sponsor-name">OMEDIA <span>Agency</span></div>
+          <div class="footer-sponsor-desc">وكالة التسويق الرقمي — الأستاذ أسامة</div>
+        </div>
+        <svg class="footer-sponsor-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M7 17L17 7M7 7h10v10"/>
+        </svg>
+      </a>
+    </div>
+    
     <div class="footer-copy">© 2026 جميع الحقوق محفوظة</div>
   </footer>
 
-  <!-- ============ BOTTOM NAV ============ -->
   <nav class="bottom-nav">
     <a href="/" class="nav-item active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -776,13 +703,11 @@
     </a>
   </nav>
 
-  <!-- ============ SCRIPTS ============ -->
   <script type="module">
     import { clinicsAPI, servicesAPI } from '/js/api.js';
     import { toast, helpers, haptic } from '/js/ui.js';
     import '/js/app.js';
     
-    // ============ LOAD CLINICS ============
     async function loadClinics() {
       const container = document.getElementById('clinics-container');
       
@@ -869,7 +794,6 @@
           container.appendChild(card);
         });
         
-        // Re-init fade-in
         helpers.initFadeIn();
         
       } catch (error) {
@@ -885,7 +809,6 @@
       }
     }
     
-    // ============ LOAD SERVICES PREVIEW ============
     async function loadServicesPreview() {
       const container = document.getElementById('services-preview');
       
@@ -897,7 +820,6 @@
           return;
         }
         
-        // Show first 6 services
         const services = data.data.slice(0, 6);
         
         container.innerHTML = services.map(service => `
@@ -917,7 +839,6 @@
       }
     }
     
-    // ============ HELPERS ============
     function getClinicIcon(specialty) {
       if (!specialty) return '🏥';
       specialty = specialty.toLowerCase();
@@ -928,49 +849,31 @@
       return '🏥';
     }
     
-    // ============ MENU ============
     window.showMenu = function() {
       haptic.medium();
-      const user = localStorage.getItem('elite_user');
       const isLoggedIn = !!localStorage.getItem('elite_token');
       
       import('/js/ui.js').then(({ sheet }) => {
         const content = document.createElement('div');
         content.innerHTML = `
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <a href="/" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
-              🏠 الرئيسية
-            </a>
-            <a href="/services.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
-              📋 الخدمات
-            </a>
-            <a href="/book.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
-              📅 حجز موعد
-            </a>
-            <a href="/track.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">
-              🔍 تتبع حجزي
-            </a>
+            <a href="/" class="btn btn-ghost btn-block" style="justify-content: flex-start;">🏠 الرئيسية</a>
+            <a href="/services.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">📋 الخدمات</a>
+            <a href="/book.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">📅 حجز موعد</a>
+            <a href="/track.html" class="btn btn-ghost btn-block" style="justify-content: flex-start;">🔍 تتبع حجزي</a>
             <div class="divider"></div>
             ${isLoggedIn ? `
-              <a href="/dashboard.html" class="btn btn-primary btn-block" style="justify-content: flex-start;">
-                📊 لوحة التحكم
-              </a>
+              <a href="/dashboard.html" class="btn btn-primary btn-block" style="justify-content: flex-start;">📊 لوحة التحكم</a>
             ` : `
-              <a href="/login.html" class="btn btn-primary btn-block" style="justify-content: flex-start;">
-                🔐 تسجيل الدخول
-              </a>
+              <a href="/login.html" class="btn btn-primary btn-block" style="justify-content: flex-start;">🔐 تسجيل الدخول</a>
             `}
           </div>
         `;
         
-        sheet.open({
-          title: 'القائمة',
-          content
-        });
+        sheet.open({ title: 'القائمة', content });
       });
     };
     
-    // ============ INIT ============
     loadClinics();
     loadServicesPreview();
   </script>
