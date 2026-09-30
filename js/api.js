@@ -1,6 +1,6 @@
 // ===================================
 // API Client — النخبة الطبية
-// التواصل مع Cloudflare Worker
+// Cookie + localStorage fallback
 // ===================================
 
 const API_BASE = 'https://medical-app-api.gomanji-00.workers.dev';
@@ -11,34 +11,82 @@ const API_BASE = 'https://medical-app-api.gomanji-00.workers.dev';
 const TOKEN_KEY = 'elite_token';
 const USER_KEY = 'elite_user';
 
+// ============ Cookie Helpers ============
+function setCookie(name, value, days = 30) {
+  try {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+  } catch (e) {
+    console.warn('setCookie failed:', e);
+  }
+}
+
+function getCookie(name) {
+  try {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function deleteCookie(name) {
+  try {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+  } catch (e) {}
+}
+
+// ============ Storage with Cookie Fallback ============
+function storageGet(key) {
+  // Try localStorage first
+  try {
+    const val = localStorage.getItem(key);
+    if (val) return val;
+  } catch {}
+  // Fallback to cookie
+  return getCookie(key);
+}
+
+function storageSet(key, value) {
+  // Try localStorage
+  try {
+    localStorage.setItem(key, value);
+  } catch {}
+  // Always set cookie too (redundancy)
+  setCookie(key, value);
+}
+
+function storageRemove(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch {}
+  deleteCookie(key);
+}
+
+// ============ Auth ============
 export const auth = {
   getToken() {
-    try { return localStorage.getItem(TOKEN_KEY); }
-    catch { return null; }
+    return storageGet(TOKEN_KEY);
   },
   
   setToken(token) {
-    try { localStorage.setItem(TOKEN_KEY, token); }
-    catch {}
+    storageSet(TOKEN_KEY, token);
   },
   
   getUser() {
-    try {
-      const raw = localStorage.getItem(USER_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch { return null; }
+    const raw = storageGet(USER_KEY);
+    if (!raw) return null;
+    try { return JSON.parse(raw); }
+    catch { return null; }
   },
   
   setUser(user) {
-    try { localStorage.setItem(USER_KEY, JSON.stringify(user)); }
-    catch {}
+    storageSet(USER_KEY, JSON.stringify(user));
   },
   
   clear() {
-    try {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
-    } catch {}
+    storageRemove(TOKEN_KEY);
+    storageRemove(USER_KEY);
   },
   
   isLoggedIn() {
@@ -92,7 +140,6 @@ async function request(path, options = {}) {
     }
     
     if (!response.ok) {
-      // 401 — token expired
       if (response.status === 401) {
         auth.clear();
       }
@@ -177,8 +224,9 @@ export const clinicsAPI = {
 // Services API
 // ===================================
 export const servicesAPI = {
-  async list() {
-    return request('/api/services', { skipAuth: true });
+  async list(clinicId = null) {
+    const query = clinicId ? `?clinic_id=${clinicId}` : '';
+    return request(`/api/services${query}`, { skipAuth: true });
   }
 };
 
@@ -211,6 +259,45 @@ export const appointmentsAPI = {
   
   async patientList() {
     return request('/api/patient/appointments');
+  },
+  
+  async searchByPhone(phone) {
+    return request(`/api/appointments/search?phone=${encodeURIComponent(phone)}`, { skipAuth: true });
+  }
+};
+
+// ===================================
+// Admin API
+// ===================================
+export const adminAPI = {
+  async doctors() {
+    return request('/api/admin/doctors');
+  },
+  
+  async createDoctor(payload) {
+    return request('/api/admin/doctors', {
+      method: 'POST',
+      body: payload
+    });
+  },
+  
+  async changePassword(userId, newPassword) {
+    return request('/api/admin/doctors/password', {
+      method: 'POST',
+      body: { user_id: userId, new_password: newPassword }
+    });
+  },
+  
+  async appointments(filters = {}) {
+    const params = new URLSearchParams();
+    if (filters.clinic_id) params.append('clinic_id', filters.clinic_id);
+    if (filters.status) params.append('status', filters.status);
+    const query = params.toString();
+    return request(`/api/admin/appointments${query ? '?' + query : ''}`);
+  },
+  
+  async deleteAppointment(id) {
+    return request(`/api/admin/appointments/${id}`, { method: 'DELETE' });
   }
 };
 
@@ -250,6 +337,7 @@ export default {
   clinicsAPI,
   servicesAPI,
   appointmentsAPI,
+  adminAPI,
   doctorAPI,
   patientAPI,
   systemAPI
