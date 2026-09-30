@@ -10,276 +10,61 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/app.css">
   <style>
-    .admin-header {
-      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
-      padding: calc(var(--safe-top) + 90px) 20px 60px;
-      position: relative; overflow: hidden;
-    }
-    .admin-header::before {
-      content: ''; position: absolute; inset: -50%;
-      background: radial-gradient(circle at 30% 30%, rgba(201,169,97,0.15), transparent 60%);
-    }
-    .admin-content { position: relative; z-index: 1; }
-    .admin-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 12px;
-      background: rgba(201,169,97,0.15);
-      border: 1px solid rgba(201,169,97,0.3);
-      color: var(--gold);
-      border-radius: 999px;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-    .admin-title {
-      color: #fff; font-size: 1.5rem;
-      font-weight: 900; margin-bottom: 4px;
-    }
-    .admin-sub {
-      color: rgba(255,255,255,0.55);
-      font-size: 13px;
-    }
-    .quick-stats {
-      padding: 0 20px;
-      margin-top: -30px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      position: relative; z-index: 2;
-    }
-    .qs-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 14px 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      text-align: center;
-      border: 1px solid rgba(0,0,0,0.04);
-    }
-    .qs-value {
-      font-size: 1.4rem; font-weight: 900;
-      color: var(--gold-dark); line-height: 1.1;
-    }
-    .qs-label {
-      font-size: 10.5px; color: var(--gray);
-      font-weight: 700; margin-top: 3px;
-    }
-    .admin-area { padding: 24px 20px 100px; }
-    .admin-tabs {
-      display: flex; gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 20px;
-    }
-    .admin-tabs::-webkit-scrollbar { display: none; }
-    .admin-tab {
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1.5px solid var(--gray-light);
-      font-family: inherit;
-      font-size: 13px; font-weight: 700;
-      color: var(--gray); white-space: nowrap;
-      cursor: pointer; transition: all .2s;
-    }
-    .admin-tab.active {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #000; border-color: var(--gold);
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .section-head {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .section-head-title {
-      font-size: 1.0625rem; font-weight: 800; color: #000;
-    }
-    .add-btn {
-      padding: 9px 16px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #000; border: none;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 12.5px; font-weight: 800;
-      cursor: pointer; transition: all .2s;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .add-btn:active { transform: scale(0.95); }
-    .item-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-      border: 1px solid rgba(0,0,0,0.04);
-      margin-bottom: 10px;
-    }
-    .item-top {
-      display: flex; gap: 12px; align-items: flex-start;
-      margin-bottom: 12px;
-    }
-    .item-icon {
-      width: 48px; height: 48px;
-      border-radius: 14px;
-      background: rgba(201,169,97,0.1);
-      border: 1px solid rgba(201,169,97,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
-    }
-    .item-body { flex: 1; min-width: 0; }
-    .item-title {
-      font-size: 15px; font-weight: 800;
-      color: #000; margin-bottom: 4px;
-    }
-    .item-sub {
-      font-size: 12.5px; color: var(--gray);
-      line-height: 1.5;
-    }
-    .item-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding-top: 12px;
-      border-top: 1px solid var(--gray-light);
-    }
-    .item-btn {
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      font-family: inherit;
-      font-size: 12.5px; font-weight: 700;
-      cursor: pointer; transition: all .2s;
-      display: flex; align-items: center; justify-content: center;
-      gap: 5px;
-    }
-    .item-btn:active { transform: scale(0.96); }
-    .btn-edit {
-      background: rgba(59,130,246,0.1);
-      color: #1D4ED8;
-      border: 1px solid rgba(59,130,246,0.2);
-    }
-    .btn-delete {
-      background: rgba(239,68,68,0.08);
-      color: #B91C1C;
-      border: 1px solid rgba(239,68,68,0.18);
-    }
-    .btn-call {
-      background: rgba(34,197,94,0.1);
-      color: #15803D;
-      border: 1px solid rgba(34,197,94,0.2);
-    }
-    .btn-password {
-      background: rgba(245,158,11,0.1);
-      color: #B45309;
-      border: 1px solid rgba(245,158,11,0.2);
-    }
-    .form-dialog {
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-label {
-      font-size: 13px; font-weight: 700; color: #000;
-    }
-    .form-label .req { color: #EF4444; }
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--gray-light);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 14px; color: #000;
-      background: #fff;
-      transition: all .2s;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none; border-color: var(--gold);
-      box-shadow: 0 0 0 4px rgba(201,169,97,0.12);
-    }
-    .form-textarea {
-      min-height: 80px; resize: vertical; line-height: 1.5;
-    }
-    .form-select {
-      -webkit-appearance: none; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23C9A961' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: left 12px center;
-      padding-left: 40px;
-    }
-    .suggest-box {
-      background: rgba(201,169,97,0.08);
-      border: 1.5px dashed rgba(201,169,97,0.4);
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 6px;
-    }
-    .suggest-title {
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--gold-dark);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .suggest-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .suggest-label {
-      font-size: 11.5px;
-      color: var(--gray);
-      font-weight: 700;
-      min-width: 70px;
-    }
-    .suggest-value {
-      flex: 1;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      background: #fff;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(201,169,97,0.2);
-      direction: ltr;
-      text-align: left;
-      cursor: pointer;
-    }
-    .suggest-value:active {
-      background: rgba(201,169,97,0.1);
-    }
-    .suggest-copy {
-      padding: 6px 10px;
-      background: var(--gold);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .suggest-copy:active {
-      transform: scale(0.95);
-    }
-    .logout-btn {
-      width: 100%;
-      padding: 14px;
-      background: #fff;
-      color: #EF4444;
-      border: 1.5px solid rgba(239,68,68,0.2);
-      border-radius: 14px;
-      font-family: inherit;
-      font-size: 14px; font-weight: 800;
-      cursor: pointer; margin-top: 20px;
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px;
-    }
-    .empty {
-      text-align: center; padding: 50px 20px;
-    }
-    .empty-icon { font-size: 52px; margin-bottom: 12px; opacity: 0.5; }
-    .empty-title { font-size: 1.0625rem; font-weight: 800; margin-bottom: 6px; }
-    .empty-text { color: var(--gray); font-size: 13px; }
+    .admin-header{background:linear-gradient(160deg,#0A0A0A,#1A1A1A);padding:calc(var(--safe-top) + 90px) 20px 60px;position:relative;overflow:hidden}
+    .admin-header::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 30% 30%,rgba(201,169,97,0.15),transparent 60%)}
+    .admin-content{position:relative;z-index:1}
+    .admin-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(201,169,97,0.15);border:1px solid rgba(201,169,97,0.3);color:var(--gold);border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:12px}
+    .admin-title{color:#fff;font-size:1.5rem;font-weight:900;margin-bottom:4px}
+    .admin-sub{color:rgba(255,255,255,0.55);font-size:13px}
+    .quick-stats{padding:0 20px;margin-top:-30px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;z-index:2}
+    .qs-card{background:#fff;border-radius:16px;padding:14px 10px;box-shadow:0 8px 24px rgba(0,0,0,0.08);text-align:center;border:1px solid rgba(0,0,0,0.04)}
+    .qs-value{font-size:1.4rem;font-weight:900;color:var(--gold-dark);line-height:1.1}
+    .qs-label{font-size:10.5px;color:var(--gray);font-weight:700;margin-top:3px}
+    .admin-area{padding:24px 20px 100px}
+    .admin-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px}
+    .admin-tabs::-webkit-scrollbar{display:none}
+    .admin-tab{padding:10px 18px;border-radius:999px;background:#fff;border:1.5px solid var(--gray-light);font-family:inherit;font-size:13px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;transition:all .2s}
+    .admin-tab.active{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;border-color:var(--gold)}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .section-head-title{font-size:1.0625rem;font-weight:800;color:#000}
+    .add-btn{padding:9px 16px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;border:none;border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+    .add-btn:active{transform:scale(0.95)}
+    .item-card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.04);margin-bottom:10px}
+    .item-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+    .item-icon{width:48px;height:48px;border-radius:14px;background:rgba(201,169,97,0.1);border:1px solid rgba(201,169,97,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+    .item-body{flex:1;min-width:0}
+    .item-title{font-size:15px;font-weight:800;color:#000;margin-bottom:4px}
+    .item-sub{font-size:12.5px;color:var(--gray);line-height:1.5}
+    .item-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid var(--gray-light)}
+    .item-btn{padding:10px;border-radius:10px;border:none;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+    .item-btn:active{transform:scale(0.96)}
+    .btn-edit{background:rgba(59,130,246,0.1);color:#1D4ED8;border:1px solid rgba(59,130,246,0.2)}
+    .btn-delete{background:rgba(239,68,68,0.08);color:#B91C1C;border:1px solid rgba(239,68,68,0.18)}
+    .btn-call{background:rgba(34,197,94,0.1);color:#15803D;border:1px solid rgba(34,197,94,0.2)}
+    .btn-password{background:rgba(245,158,11,0.1);color:#B45309;border:1px solid rgba(245,158,11,0.2)}
+    .form-dialog{display:flex;flex-direction:column;gap:14px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-label{font-size:13px;font-weight:700;color:#000}
+    .form-label .req{color:#EF4444}
+    .form-input,.form-select,.form-textarea{width:100%;padding:12px 14px;border:1.5px solid var(--gray-light);border-radius:12px;font-family:inherit;font-size:14px;color:#000;background:#fff;transition:all .2s}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,169,97,0.12)}
+    .form-textarea{min-height:80px;resize:vertical;line-height:1.5}
+    .form-select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23C9A961' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 12px center;padding-left:40px}
+    .suggest-box{background:rgba(201,169,97,0.08);border:1.5px dashed rgba(201,169,97,0.4);border-radius:14px;padding:14px;margin-top:6px}
+    .suggest-title{font-size:12px;font-weight:800;color:var(--gold-dark);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .suggest-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .suggest-label{font-size:11.5px;color:var(--gray);font-weight:700;min-width:70px}
+    .suggest-value{flex:1;font-family:'Courier New',monospace;font-size:13px;background:#fff;padding:6px 10px;border-radius:8px;border:1px solid rgba(201,169,97,0.2);direction:ltr;text-align:left;cursor:pointer}
+    .suggest-value:active{background:rgba(201,169,97,0.1)}
+    .suggest-copy{padding:6px 10px;background:var(--gold);color:#000;border:none;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer}
+    .suggest-copy:active{transform:scale(0.95)}
+    .logout-btn{width:100%;padding:14px;background:#fff;color:#EF4444;border:1.5px solid rgba(239,68,68,0.2);border-radius:14px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .empty{text-align:center;padding:50px 20px}
+    .empty-icon{font-size:52px;margin-bottom:12px;opacity:0.5}
+    .empty-title{font-size:1.0625rem;font-weight:800;margin-bottom:6px}
+    .empty-text{color:var(--gray);font-size:13px}
   </style>
 </head>
 <body>
@@ -327,7 +112,6 @@
       <button class="admin-tab" data-tab="appointments">📅 الحجوزات</button>
     </div>
 
-    <!-- CLINICS TAB -->
     <div class="tab-content active" id="tab-clinics">
       <div class="section-head">
         <div class="section-head-title">🏥 إدارة العيادات</div>
@@ -342,7 +126,6 @@
       <div id="clinics-list"></div>
     </div>
 
-    <!-- DOCTORS TAB -->
     <div class="tab-content" id="tab-doctors">
       <div class="section-head">
         <div class="section-head-title">👨‍⚕️ إدارة الأطباء</div>
@@ -357,7 +140,6 @@
       <div id="doctors-list"></div>
     </div>
 
-    <!-- SERVICES TAB -->
     <div class="tab-content" id="tab-services">
       <div class="section-head">
         <div class="section-head-title">📋 إدارة الخدمات</div>
@@ -372,7 +154,6 @@
       <div id="services-list"></div>
     </div>
 
-    <!-- APPOINTMENTS TAB -->
     <div class="tab-content" id="tab-appointments">
       <div class="section-head">
         <div class="section-head-title">📅 كل الحجوزات</div>
@@ -387,8 +168,9 @@
       تسجيل الخروج
     </button>
   </section>
+
   <script type="module">
-    import { auth, authAPI, clinicsAPI, servicesAPI } from '/js/api.js';
+    import { auth, authAPI, clinicsAPI, servicesAPI, adminAPI } from '/js/api.js';
     import { toast, haptic, loader, sheet, helpers } from '/js/ui.js';
     import '/js/app.js';
 
@@ -443,23 +225,39 @@
       });
     }
 
-    // ============ ADMIN API ============
+    // ============ ADMIN API WRAPPER ============
     const API_BASE = 'https://medical-app-api.gomanji-00.workers.dev';
 
     async function adminRequest(path, options = {}) {
-      const token = auth.getToken();
+      let token = auth.getToken();
+      
+      if (!token) {
+        throw new Error('مش مسجّل دخول');
+      }
+      
       const res = await fetch(`${API_BASE}${path}`, {
         method: options.method || 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': 'Bearer ' + token
         },
         body: options.body ? JSON.stringify(options.body) : undefined
       });
-      const data = await res.json();
+      
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        throw new Error('رد غير صحيح من السيرفر');
+      }
+      
       if (!res.ok || !data.success) {
+        if (res.status === 401 || res.status === 403) {
+          auth.clear();
+        }
         throw new Error(data.error || 'فشل الطلب');
       }
+      
       return data;
     }
 
@@ -477,46 +275,28 @@
       return '🏥';
     }
 
-    // Generate username from Arabic name
     function generateUsername(arabicName, specialty) {
-      // English transliteration map for common Arabic letters
       const map = {
-        'أ': 'a', 'ا': 'a', 'إ': 'e', 'ب': 'b', 'ت': 't', 'ث': 'th',
-        'ج': 'g', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'z', 'ر': 'r',
-        'ز': 'z', 'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't',
-        'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k',
-        'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'w', 'ي': 'y',
-        'ى': 'a', 'ة': 'a', 'ء': 'a', 'ئ': 'e', 'ؤ': 'o'
+        'أ':'a','ا':'a','إ':'e','ب':'b','ت':'t','ث':'th','ج':'g','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ى':'a','ة':'a','ء':'a','ئ':'e','ؤ':'o'
       };
-      
-      // Remove "د." and spaces
       let name = arabicName.replace(/^د\.\s*/, '').trim();
-      
-      // Transliterate
       let result = '';
       for (const char of name) {
         if (char === ' ') continue;
         result += map[char] || '';
       }
-      
-      // If empty, use specialty-based
       if (!result) {
         const specialtyMap = {
-          'أسنان': 'dental', 'جراحة': 'surgery', 'جلدية': 'derma',
-          'أطفال': 'kids', 'باطنة': 'internal', 'عظام': 'ortho',
-          'عيون': 'eyes', 'قلب': 'cardio', 'مخ وأعصاب': 'neuro',
-          'أنف وأذن': 'ent', 'نساء وتوليد': 'gyno', 'مسالك': 'urology'
+          'أسنان':'dental','جراحة':'surgery','جلدية':'derma','أطفال':'kids','باطنة':'internal','عظام':'ortho','عيون':'eyes','قلب':'cardio','مخ وأعصاب':'neuro','أنف وأذن':'ent','نساء وتوليد':'gyno','مسالك':'urology'
         };
         result = specialtyMap[specialty] || 'doctor';
       }
-      
       return result.toLowerCase();
     }
 
     function generateSuggestions(doctorName, specialty) {
       const username = generateUsername(doctorName, specialty);
       const email = `dr.${username}@clinic.com`;
-      // Capitalize first letter of username for password
       const cap = username.charAt(0).toUpperCase() + username.slice(1);
       const password = `${cap}@2026`;
       return { email, password, username };
@@ -529,7 +309,6 @@
           haptic.light();
         }).catch(() => {});
       } else {
-        // Fallback
         const ta = document.createElement('textarea');
         ta.value = text;
         document.body.appendChild(ta);
@@ -539,6 +318,7 @@
         toast.success('✅ تم النسخ');
       }
     }
+    window.copyToClipboard = copyToClipboard;
 
     // ============ CLINICS ============
     let clinics = [];
@@ -625,9 +405,7 @@
           <label class="form-label">مواعيد العمل</label>
           <input class="form-input" id="f-hours" value="${clinic ? helpers.escape(clinic.working_hours || '') : ''}" placeholder="مثال: 9ص - 9م">
         </div>
-        ${!isEdit ? `
-          <div id="suggestions-container"></div>
-        ` : ''}
+        ${!isEdit ? `<div id="suggestions-container"></div>` : ''}
       `;
 
       sheet.open({
@@ -679,26 +457,19 @@
         ]
       });
 
-      // Update suggestions if not edit
-      if (!isEdit) {
-        setTimeout(() => updateSuggestions(), 100);
-      }
+      if (!isEdit) setTimeout(() => updateSuggestions(), 100);
     };
 
     window.updateSuggestions = function() {
       const container = document.getElementById('suggestions-container');
       if (!container) return;
-      
       const doctorName = document.getElementById('f-doctor')?.value.trim();
       const specialty = document.getElementById('f-specialty')?.value;
-      
       if (!doctorName || doctorName.length < 3) {
         container.innerHTML = '';
         return;
       }
-
       const { email, password } = generateSuggestions(doctorName, specialty);
-      
       container.innerHTML = `
         <div class="suggest-box">
           <div class="suggest-title">💡 اقتراح تلقائي لحساب الطبيب</div>
@@ -712,14 +483,9 @@
             <span class="suggest-value" onclick="copyToClipboard('${password}')">${password}</span>
             <button class="suggest-copy" onclick="copyToClipboard('${password}')">📋</button>
           </div>
-          <div style="font-size: 11px; color: var(--gray); margin-top: 8px; line-height: 1.5;">
-            ⚠️ احفظ البيانات دي — هتحتاجها لما تضيف الطبيب
-          </div>
         </div>
       `;
     };
-
-    window.copyToClipboard = copyToClipboard;
 
     window.editClinic = function(id) {
       const clinic = clinics.find(c => c.id === id);
@@ -730,17 +496,13 @@
       const ok = await sheet.confirm({
         title: 'حذف العيادة؟',
         message: 'هل أنت متأكد؟ سيتم حذف كل شيء مرتبط بها.',
-        confirmText: 'حذف',
-        cancelText: 'إلغاء',
-        variant: 'btn-dark'
+        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
       });
       if (!ok) return;
-
       loader.show();
       try {
         await adminRequest(`/api/clinics/${id}`, { method: 'DELETE' });
-        loader.hide();
-        haptic.success();
+        loader.hide(); haptic.success();
         toast.success('✅ تم حذف العيادة');
         await loadClinics();
       } catch (err) {
@@ -757,7 +519,7 @@
       if (!c) return;
       c.innerHTML = '<div class="skeleton skeleton-card" style="height:120px;"></div>';
       try {
-        const data = await adminRequest('/api/admin/doctors');
+        const data = await adminAPI.doctors();
         doctors = data.data || [];
 
         if (!doctors.length) {
@@ -780,12 +542,8 @@
               </div>
             </div>
             <div class="item-actions">
-              <button class="item-btn btn-password" onclick="changePassword(${d.id}, '${helpers.escape(d.full_name)}')">
-                🔑 تغيير الباسورد
-              </button>
-              <button class="item-btn btn-call" onclick="window.location.href='tel:${d.phone || ''}'">
-                📞 اتصال
-              </button>
+              <button class="item-btn btn-password" onclick="changePassword(${d.id}, '${helpers.escape(d.full_name)}')">🔑 تغيير الباسورد</button>
+              <button class="item-btn btn-call" onclick="window.location.href='tel:${d.phone || ''}'">📞 اتصال</button>
             </div>
           </div>
         `).join('');
@@ -799,7 +557,6 @@
         toast.error('أضف عيادة أولاً');
         return;
       }
-
       const content = document.createElement('div');
       content.className = 'form-dialog';
       content.innerHTML = `
@@ -844,7 +601,6 @@
                 password: document.getElementById('d-password').value,
                 phone: document.getElementById('d-phone').value.trim()
               };
-
               if (!payload.full_name || !payload.email || !payload.password) {
                 toast.error('الاسم والإيميل والباسورد مطلوبين');
                 haptic.error();
@@ -855,17 +611,14 @@
                 haptic.error();
                 return false;
               }
-
               loader.show();
               try {
-                await adminRequest('/api/admin/doctors', { method: 'POST', body: payload });
-                loader.hide();
-                haptic.success();
+                await adminAPI.createDoctor(payload);
+                loader.hide(); haptic.success();
                 toast.success('✅ تم إضافة الطبيب');
                 await loadDoctors();
               } catch (err) {
-                loader.hide();
-                haptic.error();
+                loader.hide(); haptic.error();
                 toast.error(err.message || 'حدث خطأ');
                 return false;
               }
@@ -875,32 +628,21 @@
           { label: 'إلغاء', variant: 'btn-ghost', onClick: () => {} }
         ]
       });
-
       setTimeout(() => updateDoctorSuggestions(), 100);
     };
 
     window.updateDoctorSuggestions = function() {
       const container = document.getElementById('doctor-suggestions');
       if (!container) return;
-
       const name = document.getElementById('d-name')?.value.trim();
-      const clinicId = document.getElementById('d-clinic')?.value;
       const clinicSelect = document.getElementById('d-clinic');
       const specialty = clinicSelect?.selectedOptions[0]?.dataset?.specialty;
-
-      if (!name || name.length < 3) {
-        container.innerHTML = '';
-        return;
-      }
-
+      if (!name || name.length < 3) { container.innerHTML = ''; return; }
       const { email, password } = generateSuggestions(name, specialty || '');
-      
-      // Auto-fill if empty
       const emailField = document.getElementById('d-email');
       const passField = document.getElementById('d-password');
       if (emailField && !emailField.value) emailField.value = email;
       if (passField && !passField.value) passField.value = password;
-
       container.innerHTML = `
         <div class="suggest-box">
           <div class="suggest-title">💡 الاقتراح المطبّق</div>
@@ -924,11 +666,7 @@
           <label class="form-label">الباسورد الجديد <span class="req">*</span></label>
           <input class="form-input" id="np" dir="ltr" type="text" placeholder="NewPassword@2026">
         </div>
-        <div style="font-size: 11.5px; color: var(--gray); line-height: 1.5;">
-          ⚠️ احفظ الباسورد الجديد — مش هيظهر تاني
-        </div>
       `;
-
       sheet.open({
         title: '🔑 تغيير باسورد',
         content,
@@ -942,15 +680,10 @@
                 toast.error('الباسورد لازم 6 أحرف على الأقل');
                 return false;
               }
-
               loader.show();
               try {
-                await adminRequest('/api/admin/doctors/password', {
-                  method: 'POST',
-                  body: { user_id: userId, new_password: newPass }
-                });
-                loader.hide();
-                haptic.success();
+                await adminAPI.changePassword(userId, newPass);
+                loader.hide(); haptic.success();
                 toast.success('✅ تم تغيير الباسورد');
               } catch (err) {
                 loader.hide();
@@ -983,21 +716,46 @@
           return;
         }
 
-        c.innerHTML = services.map(s => `
-          <div class="item-card">
-            <div class="item-top">
-              <div class="item-icon">${s.icon || '⚕️'}</div>
-              <div class="item-body">
-                <div class="item-title">${helpers.escape(s.name)}</div>
-                <div class="item-sub">${helpers.escape(s.category || '')} • ${s.price_aed} AED • ${s.duration_minutes || 30} د</div>
+        // Group by clinic
+        const byClinic = {};
+        services.forEach(s => {
+          const key = s.clinic_id || 0;
+          if (!byClinic[key]) byClinic[key] = [];
+          byClinic[key].push(s);
+        });
+
+        let html = '';
+        Object.keys(byClinic).sort().forEach(clinicId => {
+          const clinic = clinics.find(c => c.id === parseInt(clinicId));
+          const group = byClinic[clinicId];
+          const title = clinicId === '0' || clinicId === 0
+            ? '📌 خدمات مشتركة (كل العيادات)'
+            : `🏥 ${clinic ? helpers.escape(clinic.name) : 'عيادة #' + clinicId} (${group.length})`;
+          
+          html += `
+            <div style="margin-bottom:16px;">
+              <div style="font-size:13px;font-weight:800;color:var(--gold-dark);margin-bottom:10px;padding:8px 12px;background:rgba(201,169,97,0.08);border-radius:10px;">
+                ${title}
               </div>
+              ${group.map(s => `
+                <div class="item-card">
+                  <div class="item-top">
+                    <div class="item-icon">${s.icon || '⚕️'}</div>
+                    <div class="item-body">
+                      <div class="item-title">${helpers.escape(s.name)}</div>
+                      <div class="item-sub">${helpers.escape(s.category || '')} • ${s.price_aed} AED • ${s.duration_minutes || 30} د</div>
+                    </div>
+                  </div>
+                  <div class="item-actions">
+                    <button class="item-btn btn-edit" onclick="editService(${s.id})">✏️ تعديل</button>
+                    <button class="item-btn btn-delete" onclick="deleteService(${s.id})">🗑️ حذف</button>
+                  </div>
+                </div>
+              `).join('')}
             </div>
-            <div class="item-actions">
-              <button class="item-btn btn-edit" onclick="editService(${s.id})">✏️ تعديل</button>
-              <button class="item-btn btn-delete" onclick="deleteService(${s.id})">🗑️ حذف</button>
-            </div>
-          </div>
-        `).join('');
+          `;
+        });
+        c.innerHTML = html;
       } catch (err) {
         c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
       }
@@ -1013,23 +771,19 @@
           <input class="form-input" id="s-name" value="${service ? helpers.escape(service.name) : ''}" placeholder="مثال: زراعة أسنان">
         </div>
         <div class="form-group">
+          <label class="form-label">العيادة <span class="req">*</span></label>
+          <select class="form-select" id="s-clinic">
+            <option value="">-- اختر العيادة --</option>
+            ${clinics.map(c => `<option value="${c.id}" ${service?.clinic_id == c.id ? 'selected' : ''}>${helpers.escape(c.name)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
           <label class="form-label">السعر (AED) <span class="req">*</span></label>
           <input class="form-input" id="s-price" type="number" value="${service ? service.price_aed : ''}" placeholder="500">
         </div>
         <div class="form-group">
           <label class="form-label">الفئة</label>
-          <select class="form-select" id="s-cat">
-            <option value="أسنان - تجميل" ${service?.category === 'أسنان - تجميل' ? 'selected' : ''}>🦷 أسنان - تجميل</option>
-            <option value="أسنان - زراعة" ${service?.category === 'أسنان - زراعة' ? 'selected' : ''}>🦷 أسنان - زراعة</option>
-            <option value="أسنان - علاج" ${service?.category === 'أسنان - علاج' ? 'selected' : ''}>🦷 أسنان - علاج</option>
-            <option value="أسنان - تقويم" ${service?.category === 'أسنان - تقويم' ? 'selected' : ''}>📐 أسنان - تقويم</option>
-            <option value="أسنان - جراحة" ${service?.category === 'أسنان - جراحة' ? 'selected' : ''}>🔧 أسنان - جراحة</option>
-            <option value="أسنان - تركيبات" ${service?.category === 'أسنان - تركيبات' ? 'selected' : ''}>👑 أسنان - تركيبات</option>
-            <option value="جراحة - تجميل" ${service?.category === 'جراحة - تجميل' ? 'selected' : ''}>🔬 جراحة - تجميل</option>
-            <option value="جراحة - عامة" ${service?.category === 'جراحة - عامة' ? 'selected' : ''}>🔬 جراحة - عامة</option>
-            <option value="جراحة - سمنة" ${service?.category === 'جراحة - سمنة' ? 'selected' : ''}>🏆 جراحة - سمنة</option>
-            <option value="استشارة" ${service?.category === 'استشارة' ? 'selected' : ''}>📋 استشارة</option>
-          </select>
+          <input class="form-input" id="s-cat" value="${service ? helpers.escape(service.category || '') : ''}" placeholder="مثال: أسنان - تجميل">
         </div>
         <div class="form-group">
           <label class="form-label">الأيقونة (Emoji)</label>
@@ -1055,19 +809,23 @@
             onClick: async () => {
               const payload = {
                 name: document.getElementById('s-name').value.trim(),
+                clinic_id: parseInt(document.getElementById('s-clinic').value) || null,
                 price_aed: parseFloat(document.getElementById('s-price').value),
-                category: document.getElementById('s-cat').value,
+                category: document.getElementById('s-cat').value.trim(),
                 icon: document.getElementById('s-icon').value.trim() || '⚕️',
                 duration_minutes: parseInt(document.getElementById('s-duration').value) || 30,
                 description: document.getElementById('s-desc').value.trim()
               };
-
               if (!payload.name || isNaN(payload.price_aed)) {
                 toast.error('الاسم والسعر مطلوبين');
                 haptic.error();
                 return false;
               }
-
+              if (!payload.clinic_id) {
+                toast.error('اختر العيادة');
+                haptic.error();
+                return false;
+              }
               loader.show();
               try {
                 if (isEdit) {
@@ -1077,12 +835,10 @@
                   await adminRequest('/api/services', { method: 'POST', body: payload });
                   toast.success('✅ تم إضافة الخدمة');
                 }
-                loader.hide();
-                haptic.success();
+                loader.hide(); haptic.success();
                 await loadServices();
               } catch (err) {
-                loader.hide();
-                haptic.error();
+                loader.hide(); haptic.error();
                 toast.error(err.message || 'حدث خطأ');
                 return false;
               }
@@ -1103,17 +859,13 @@
       const ok = await sheet.confirm({
         title: 'حذف الخدمة؟',
         message: 'هل أنت متأكد من الحذف؟',
-        confirmText: 'حذف',
-        cancelText: 'إلغاء',
-        variant: 'btn-dark'
+        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
       });
       if (!ok) return;
-
       loader.show();
       try {
         await adminRequest(`/api/services/${id}`, { method: 'DELETE' });
-        loader.hide();
-        haptic.success();
+        loader.hide(); haptic.success();
         toast.success('✅ تم حذف الخدمة');
         await loadServices();
       } catch (err) {
@@ -1128,7 +880,7 @@
       if (!c) return;
       c.innerHTML = '<div class="skeleton skeleton-card" style="height:100px;"></div>';
       try {
-        const data = await adminRequest('/api/admin/appointments');
+        const data = await adminAPI.appointments();
         const appts = data.data || [];
         const qsAppts = document.getElementById('qs-appts');
         if (qsAppts) qsAppts.textContent = appts.length;
@@ -1183,17 +935,13 @@
       const ok = await sheet.confirm({
         title: 'حذف الحجز؟',
         message: 'هل أنت متأكد من حذف هذا الحجز؟',
-        confirmText: 'حذف',
-        cancelText: 'إلغاء',
-        variant: 'btn-dark'
+        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
       });
       if (!ok) return;
-
       loader.show();
       try {
-        await adminRequest(`/api/admin/appointments/${id}`, { method: 'DELETE' });
-        loader.hide();
-        haptic.success();
+        await adminAPI.deleteAppointment(id);
+        loader.hide(); haptic.success();
         toast.success('✅ تم حذف الحجز');
         await loadAppointments();
       } catch (err) {
@@ -1207,9 +955,7 @@
       const ok = await sheet.confirm({
         title: 'تسجيل الخروج؟',
         message: 'هل تريد الخروج؟',
-        confirmText: 'خروج',
-        cancelText: 'إلغاء',
-        variant: 'btn-dark'
+        confirmText: 'خروج', cancelText: 'إلغاء', variant: 'btn-dark'
       });
       if (ok) {
         await authAPI.logout();
