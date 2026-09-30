@@ -2,7 +2,7 @@
 // Service Worker — النخبة الطبية
 // ===================================
 
-const CACHE_VERSION = 'v3.0.0';
+const CACHE_VERSION = 'v4.0.0';
 const CACHE_NAME = `elite-medical-${CACHE_VERSION}`;
 
 // الملفات الأساسية (App Shell)
