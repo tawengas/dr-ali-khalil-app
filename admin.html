@@ -1,356 +1,31 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0A0A0A">
-  <title>لوحة الأدمن — النخبة الطبية</title>
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/app.css">
-  <style>
-    .admin-header {
-      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
-      padding: calc(var(--safe-top) + 90px) 20px 60px;
-      position: relative; overflow: hidden;
-    }
-    .admin-header::before {
-      content: ''; position: absolute; inset: -50%;
-      background: radial-gradient(circle at 30% 30%, rgba(201,169,97,0.15), transparent 60%);
-    }
-    .admin-content { position: relative; z-index: 1; }
-    .admin-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 12px;
-      background: rgba(201,169,97,0.15);
-      border: 1px solid rgba(201,169,97,0.3);
-      color: var(--gold);
-      border-radius: 999px;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-    .admin-title {
-      color: #fff; font-size: 1.5rem;
-      font-weight: 900; margin-bottom: 4px;
-    }
-    .admin-sub {
-      color: rgba(255,255,255,0.55);
-      font-size: 13px;
-    }
-    .quick-stats {
-      padding: 0 20px;
-      margin-top: -30px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      position: relative; z-index: 2;
-    }
-    .qs-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 14px 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      text-align: center;
-      border: 1px solid rgba(0,0,0,0.04);
-    }
-    .qs-value {
-      font-size: 1.4rem; font-weight: 900;
-      color: var(--gold-dark); line-height: 1.1;
-    }
-    .qs-label {
-      font-size: 10.5px; color: var(--gray);
-      font-weight: 700; margin-top: 3px;
-    }
-    .admin-area { padding: 24px 20px 100px; }
-    .admin-tabs {
-      display: flex; gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 20px;
-    }
-    .admin-tabs::-webkit-scrollbar { display: none; }
-    .admin-tab {
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1.5px solid var(--gray-light);
-      font-family: inherit;
-      font-size: 13px; font-weight: 700;
-      color: var(--gray); white-space: nowrap;
-      cursor: pointer; transition: all .2s;
-    }
-    .admin-tab.active {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #000; border-color: var(--gold);
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .section-head {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .section-head-title {
-      font-size: 1.0625rem; font-weight: 800; color: #000;
-    }
-    .add-btn {
-      padding: 9px 16px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #000; border: none;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 12.5px; font-weight: 800;
-      cursor: pointer; transition: all .2s;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .add-btn:active { transform: scale(0.95); }
-    .item-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-      border: 1px solid rgba(0,0,0,0.04);
-      margin-bottom: 10px;
-    }
-    .item-top {
-      display: flex; gap: 12px; align-items: flex-start;
-      margin-bottom: 12px;
-    }
-    .item-icon {
-      width: 48px; height: 48px;
-      border-radius: 14px;
-      background: rgba(201,169,97,0.1);
-      border: 1px solid rgba(201,169,97,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
-    }
-    .item-body { flex: 1; min-width: 0; }
-    .item-title {
-      font-size: 15px; font-weight: 800;
-      color: #000; margin-bottom: 4px;
-    }
-    .item-sub {
-      font-size: 12.5px; color: var(--gray);
-      line-height: 1.5;
-    }
-    .item-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding-top: 12px;
-      border-top: 1px solid var(--gray-light);
-    }
-    .item-btn {
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      font-family: inherit;
-      font-size: 12.5px; font-weight: 700;
-      cursor: pointer; transition: all .2s;
-      display: flex; align-items: center; justify-content: center;
-      gap: 5px;
-    }
-    .item-btn:active { transform: scale(0.96); }
-    .btn-edit {
-      background: rgba(59,130,246,0.1);
-      color: #1D4ED8;
-      border: 1px solid rgba(59,130,246,0.2);
-    }
-    .btn-delete {
-      background: rgba(239,68,68,0.08);
-      color: #B91C1C;
-      border: 1px solid rgba(239,68,68,0.18);
-    }
-    .form-dialog {
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-label {
-      font-size: 13px; font-weight: 700; color: #000;
-    }
-    .form-label .req { color: #EF4444; }
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--gray-light);
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 14px; color: #000;
-      background: #fff;
-      transition: all .2s;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none; border-color: var(--gold);
-      box-shadow: 0 0 0 4px rgba(201,169,97,0.12);
-    }
-    .form-textarea {
-      min-height: 80px; resize: vertical; line-height: 1.5;
-    }
-    .form-select {
-      -webkit-appearance: none; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23C9A961' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: left 12px center;
-      padding-left: 40px;
-    }
-    .logout-btn {
-      width: 100%;
-      padding: 14px;
-      background: #fff;
-      color: #EF4444;
-      border: 1.5px solid rgba(239,68,68,0.2);
-      border-radius: 14px;
-      font-family: inherit;
-      font-size: 14px; font-weight: 800;
-      cursor: pointer; margin-top: 20px;
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px;
-    }
-    .empty {
-      text-align: center; padding: 50px 20px;
-    }
-    .empty-icon { font-size: 52px; margin-bottom: 12px; opacity: 0.5; }
-    .empty-title { font-size: 1.0625rem; font-weight: 800; margin-bottom: 6px; }
-    .empty-text { color: var(--gray); font-size: 13px; }
-  </style>
-</head>
-<body>
-
-  <header class="app-header dark">
-    <a href="/" class="app-header-logo">
-      <div class="app-header-logo-icon">🏥</div>
-      <div class="app-header-title">النخبة <span>الطبية</span></div>
-    </a>
-    <button class="app-header-btn" onclick="logout()" aria-label="خروج">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-      </svg>
-    </button>
-  </header>
-
-  <section class="admin-header">
-    <div class="admin-content">
-      <div class="admin-badge">👑 ADMIN PANEL</div>
-      <div class="admin-title">مرحباً، <span id="admin-name">مدير</span></div>
-      <div class="admin-sub">إدارة كاملة للتطبيق</div>
-    </div>
-  </section>
-
-  <section class="quick-stats">
-    <div class="qs-card">
-      <div class="qs-value" id="qs-clinics">—</div>
-      <div class="qs-label">عيادات</div>
-    </div>
-    <div class="qs-card">
-      <div class="qs-value" id="qs-services">—</div>
-      <div class="qs-label">خدمات</div>
-    </div>
-    <div class="qs-card">
-      <div class="qs-value" id="qs-appts">—</div>
-      <div class="qs-label">حجوزات</div>
-    </div>
-  </section>
-
-  <section class="admin-area">
-    <div class="admin-tabs">
-      <button class="admin-tab active" data-tab="clinics">🏥 العيادات</button>
-      <button class="admin-tab" data-tab="services">📋 الخدمات</button>
-    </div>
-
-    <div class="tab-content active" id="tab-clinics">
-      <div class="section-head">
-        <div class="section-head-title">🏥 إدارة العيادات</div>
-        <button class="add-btn" onclick="showClinicForm()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          إضافة
-        </button>
-      </div>
-      <div id="clinics-list"></div>
-    </div>
-
-    <div class="tab-content" id="tab-services">
-      <div class="section-head">
-        <div class="section-head-title">📋 إدارة الخدمات</div>
-        <button class="add-btn" onclick="showServiceForm()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          إضافة
-        </button>
-      </div>
-      <div id="services-list"></div>
-    </div>
-
-    <button class="logout-btn" onclick="logout()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-      </svg>
-      تسجيل الخروج
-    </button>
-  </section>
-
   <script type="module">
     import { auth, authAPI, clinicsAPI, servicesAPI } from '/js/api.js';
     import { toast, haptic, loader, sheet, helpers } from '/js/ui.js';
     import '/js/app.js';
 
-    // ============ AUTH CHECK ============
     if (!auth.isLoggedIn()) {
-      window.location.replace('/login.html');
-    } else {
-      const user = auth.getUser();
-      if (user && user.role !== 'admin') {
-        window.location.replace(user.role === 'doctor' ? '/dashboard.html' : '/login.html');
-      } else {
-        initAdmin(user);
-      }
+      window.location.href = '/login.html';
     }
-
-    function initAdmin(user) {
-      // Safe DOM update
-      const setAdminName = () => {
-        const el = document.getElementById('admin-name');
-        if (el) el.textContent = user?.full_name || 'مدير';
-      };
-      
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          setAdminName();
-          setupTabs();
-          loadClinics();
-          loadServices();
-        });
-      } else {
-        setAdminName();
-        setupTabs();
-        loadClinics();
-        loadServices();
-      }
+    const user = auth.getUser();
+    if (user && user.role !== 'admin') {
+      window.location.href = user.role === 'doctor' ? '/dashboard.html' : '/login.html';
     }
+    document.getElementById('admin-name').textContent = user?.full_name || 'مدير';
 
     // ============ TABS ============
-    function setupTabs() {
-      document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          haptic.light();
-          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          tab.classList.add('active');
-          const tabEl = document.getElementById(`tab-${tab.dataset.tab}`);
-          if (tabEl) tabEl.classList.add('active');
-        });
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        haptic.light();
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
       });
-    }
+    });
 
     // ============ ADMIN API ============
     const API_BASE = 'https://medical-app-api.gomanji-00.workers.dev';
-
+    
     async function adminRequest(path, options = {}) {
       const token = auth.getToken();
       const res = await fetch(`${API_BASE}${path}`, {
@@ -373,13 +48,11 @@
 
     async function loadClinics() {
       const c = document.getElementById('clinics-list');
-      if (!c) return;
       c.innerHTML = '<div class="skeleton skeleton-card" style="height:120px;"></div>';
       try {
         const data = await clinicsAPI.list();
         clinics = data.data || [];
-        const qsClinics = document.getElementById('qs-clinics');
-        if (qsClinics) qsClinics.textContent = clinics.length;
+        document.getElementById('qs-clinics').textContent = clinics.length;
 
         if (!clinics.length) {
           c.innerHTML = '<div class="empty"><div class="empty-icon">🏥</div><div class="empty-title">لا توجد عيادات</div></div>';
@@ -549,13 +222,11 @@
 
     async function loadServices() {
       const c = document.getElementById('services-list');
-      if (!c) return;
       c.innerHTML = '<div class="skeleton skeleton-card" style="height:100px;"></div>';
       try {
         const data = await servicesAPI.list();
         services = data.data || [];
-        const qsServices = document.getElementById('qs-services');
-        if (qsServices) qsServices.textContent = services.length;
+        document.getElementById('qs-services').textContent = services.length;
 
         if (!services.length) {
           c.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">لا توجد خدمات</div></div>';
@@ -716,6 +387,10 @@
         window.location.href = '/login.html';
       }
     };
+
+    // Init
+    loadClinics();
+    loadServices();
   </script>
 </body>
 </html>
