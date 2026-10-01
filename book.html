@@ -134,6 +134,12 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+    .phone-hint {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -213,7 +219,8 @@
 
       <div class="form-group">
         <label class="form-label">رقم الموبايل <span class="required">*</span></label>
-        <input type="tel" class="form-input" id="phone" placeholder="+971 50 123 4567" dir="ltr">
+        <input type="text" class="form-input" id="phone" placeholder="01278543504" dir="ltr" inputmode="tel" autocomplete="tel">
+        <div class="phone-hint">اكتب الرقم كامل مع الصفر في الأول</div>
       </div>
 
       <div class="form-group">
@@ -308,7 +315,11 @@
           </div>
         `).join('');
 
-        if (preClinic) pickClinic(parseInt(preClinic));
+        if (preClinic) {
+          pickClinic(parseInt(preClinic));
+          // Load services for this clinic
+          loadServicesForClinic(parseInt(preClinic));
+        }
       } catch (err) {
         container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray);">تعذّر تحميل العيادات</div>';
       }
@@ -321,17 +332,26 @@
       document.querySelectorAll('.clinic-option').forEach(el => {
         el.classList.toggle('selected', parseInt(el.dataset.id) === id);
       });
+      // Reload services for this clinic
+      loadServicesForClinic(id);
     };
 
-    // Load services
-    async function loadServices() {
+    // Load services (all or by clinic)
+    async function loadServicesForClinic(clinicId = null) {
       const select = document.getElementById('service');
+      select.innerHTML = '<option value="">جار التحميل...</option>';
+      
       try {
-        const data = await servicesAPI.list();
+        const data = await servicesAPI.list(clinicId);
         const services = data.data || [];
 
         const urlParams = new URLSearchParams(window.location.search);
         const preService = urlParams.get('service');
+
+        if (!services.length) {
+          select.innerHTML = '<option value="">لا توجد خدمات متاحة</option>';
+          return;
+        }
 
         select.innerHTML = '<option value="">اختر الخدمة...</option>' +
           services.map(s => `
@@ -354,7 +374,18 @@
 
       const service = document.getElementById('service').value;
       const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
+      
+      // 🔧 FIX: Preserve phone number exactly as typed (keep leading zeros)
+      let phone = document.getElementById('phone').value;
+      // Remove only whitespace and special formatting chars, keep ALL digits
+      phone = phone.replace(/[\s\-\(\)]/g, '');
+      // Keep + if present (for international format)
+      if (phone.startsWith('+')) {
+        phone = '+' + phone.slice(1).replace(/\D/g, '');
+      } else {
+        phone = phone.replace(/\D/g, '');
+      }
+      
       const date = document.getElementById('date').value;
       const time = document.getElementById('time').value;
       const notes = document.getElementById('notes').value.trim();
@@ -448,12 +479,16 @@
       if (!specialty) return '🏥';
       if (specialty.includes('أسنان') || specialty.includes('اسنان')) return '🦷';
       if (specialty.includes('جراح')) return '🔬';
+      if (specialty.includes('جلد')) return '✨';
+      if (specialty.includes('أطفال') || specialty.includes('اطفال')) return '👶';
+      if (specialty.includes('عظام')) return '🦴';
+      if (specialty.includes('عيون')) return '👁️';
+      if (specialty.includes('قلب')) return '🫀';
       return '🏥';
     }
 
     // Init
     loadClinics();
-    loadServices();
   </script>
 </body>
 </html>
