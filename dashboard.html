@@ -10,294 +10,76 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/app.css">
   <style>
-    .dash-header {
-      background: linear-gradient(160deg, #0A0A0A, #1A1A1A);
-      padding: calc(var(--safe-top) + 90px) 20px 60px;
-      position: relative;
-      overflow: hidden;
-    }
-    .dash-header::before {
-      content: ''; position: absolute; inset: -50%;
-      background: radial-gradient(circle at 30% 30%, rgba(201,169,97,0.15), transparent 60%);
-      animation: floatBg 20s ease-in-out infinite;
-    }
-    @keyframes floatBg {
-      0%, 100% { transform: translate(0,0); }
-      50% { transform: translate(-30px,-30px); }
-    }
-    .dash-content { position: relative; z-index: 1; }
-    .dash-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 12px;
-      background: rgba(201,169,97,0.15);
-      border: 1px solid rgba(201,169,97,0.3);
-      color: var(--gold);
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-    .dash-welcome {
-      color: rgba(255,255,255,0.6);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .dash-name {
-      color: #fff;
-      font-size: 1.5rem;
-      font-weight: 900;
-      margin-bottom: 6px;
-      letter-spacing: -0.02em;
-    }
-    .dash-clinic {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      background: rgba(201,169,97,0.15);
-      border: 1px solid rgba(201,169,97,0.3);
-      color: var(--gold);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .stats-grid {
-      padding: 0 20px;
-      margin-top: -30px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      position: relative;
-      z-index: 2;
-    }
-    .stat-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      border: 1px solid rgba(0,0,0,0.04);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .stat-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-    .stat-icon.gold { background: rgba(201,169,97,0.15); }
-    .stat-icon.green { background: rgba(34,197,94,0.12); }
-    .stat-icon.orange { background: rgba(245,158,11,0.12); }
-    .stat-icon.blue { background: rgba(59,130,246,0.12); }
-    .stat-body { flex: 1; min-width: 0; }
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #000;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-    .stat-label {
-      font-size: 11px;
-      color: var(--gray);
-      font-weight: 700;
-      margin-top: 2px;
-    }
-    .section-area {
-      padding: 24px 20px 100px;
-    }
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .section-head-title {
-      font-size: 1.125rem;
-      font-weight: 800;
-      color: #000;
-    }
-    .filter-tabs {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 16px;
-    }
-    .filter-tabs::-webkit-scrollbar { display: none; }
-    .tab {
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1.5px solid var(--gray-light);
-      font-family: inherit;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--gray);
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all .2s;
-    }
-    .tab.active {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #000;
-      border-color: var(--gold);
-    }
-    .appt-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .appt-item {
-      background: #fff;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-      border: 1px solid rgba(0,0,0,0.04);
-      position: relative;
-      overflow: hidden;
-    }
-    .appt-item::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 4px; height: 100%;
-    }
-    .appt-item.status-pending::before { background: #F59E0B; }
-    .appt-item.status-confirmed::before { background: #22C55E; }
-    .appt-item.status-completed::before { background: #3B82F6; }
-    .appt-item.status-cancelled::before { background: #EF4444; }
-    .appt-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .appt-name {
-      font-size: 15px;
-      font-weight: 800;
-      color: #000;
-      margin-bottom: 4px;
-    }
-    .appt-service {
-      font-size: 12px;
-      color: var(--gold-dark);
-      font-weight: 700;
-    }
-    .appt-status-badge {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .appt-info {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      padding: 12px 0;
-      border-top: 1px solid var(--gray-light);
-      border-bottom: 1px solid var(--gray-light);
-      margin-bottom: 12px;
-    }
-    .appt-info-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-    }
-    .appt-info-icon {
-      width: 24px; height: 24px;
-      border-radius: 7px;
-      background: var(--gray-lighter);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-    .appt-info-text {
-      color: #000;
-      font-weight: 600;
-    }
-    .appt-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .action {
-      padding: 11px;
-      border-radius: 12px;
-      border: none;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all .2s;
-      display: flex; align-items: center; justify-content: center;
-      gap: 6px;
-    }
-    .action:active { transform: scale(0.96); }
-    .action-confirm {
-      background: rgba(34,197,94,0.12);
-      color: #15803D;
-      border: 1px solid rgba(34,197,94,0.25);
-    }
-    .action-complete {
-      background: rgba(59,130,246,0.12);
-      color: #1D4ED8;
-      border: 1px solid rgba(59,130,246,0.25);
-    }
-    .action-cancel {
-      background: rgba(239,68,68,0.1);
-      color: #B91C1C;
-      border: 1px solid rgba(239,68,68,0.2);
-    }
-    .action-call {
-      background: rgba(201,169,97,0.12);
-      color: var(--gold-dark);
-      border: 1px solid rgba(201,169,97,0.25);
-    }
-    .logout-btn {
-      width: 100%;
-      padding: 14px;
-      background: #fff;
-      color: #EF4444;
-      border: 1.5px solid rgba(239,68,68,0.2);
-      border-radius: 14px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all .2s;
-      margin-top: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .logout-btn:active {
-      background: rgba(239,68,68,0.05);
-      transform: scale(0.98);
-    }
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-    }
-    .empty-icon { font-size: 56px; margin-bottom: 12px; opacity: 0.5; }
-    .empty-title {
-      font-size: 1.125rem;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    .empty-text {
-      color: var(--gray);
-      font-size: 13.5px;
-    }
+    .dash-header{background:linear-gradient(160deg,#0A0A0A,#1A1A1A);padding:calc(var(--safe-top) + 90px) 20px 60px;position:relative;overflow:hidden}
+    .dash-header::before{content:'';position:absolute;inset:-50%;background:radial-gradient(circle at 30% 30%,rgba(201,169,97,0.15),transparent 60%);animation:floatBg 20s ease-in-out infinite}
+    @keyframes floatBg{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-30px)}}
+    .dash-content{position:relative;z-index:1}
+    .dash-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(201,169,97,0.15);border:1px solid rgba(201,169,97,0.3);color:var(--gold);border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:12px}
+    .dash-welcome{color:rgba(255,255,255,0.6);font-size:13px;font-weight:600;margin-bottom:6px}
+    .dash-name{color:#fff;font-size:1.5rem;font-weight:900;margin-bottom:6px;letter-spacing:-0.02em}
+    .dash-clinic{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(201,169,97,0.15);border:1px solid rgba(201,169,97,0.3);color:var(--gold);border-radius:999px;font-size:12px;font-weight:700}
+    .stats-grid{padding:0 20px;margin-top:-30px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;position:relative;z-index:2}
+    .stat-card{background:#fff;border-radius:18px;padding:18px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;gap:12px}
+    .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .stat-icon.gold{background:rgba(201,169,97,0.15)}
+    .stat-icon.green{background:rgba(34,197,94,0.12)}
+    .stat-icon.orange{background:rgba(245,158,11,0.12)}
+    .stat-icon.blue{background:rgba(59,130,246,0.12)}
+    .stat-body{flex:1;min-width:0}
+    .stat-value{font-size:1.5rem;font-weight:900;color:#000;line-height:1.1;letter-spacing:-0.02em}
+    .stat-label{font-size:11px;color:var(--gray);font-weight:700;margin-top:2px}
+    .section-area{padding:24px 20px 100px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .section-head-title{font-size:1.125rem;font-weight:800;color:#000}
+    .filter-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px}
+    .filter-tabs::-webkit-scrollbar{display:none}
+    .tab{padding:8px 16px;border-radius:999px;background:#fff;border:1.5px solid var(--gray-light);font-family:inherit;font-size:12.5px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;transition:all .2s}
+    .tab.active{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;border-color:var(--gold)}
+    .appt-list{display:flex;flex-direction:column;gap:12px}
+    .appt-item{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.04);position:relative;overflow:hidden}
+    .appt-item::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%}
+    .appt-item.status-pending::before{background:#F59E0B}
+    .appt-item.status-confirmed::before{background:#22C55E}
+    .appt-item.status-completed::before{background:#3B82F6}
+    .appt-item.status-cancelled::before{background:#EF4444}
+    .appt-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px}
+    .appt-name{font-size:15px;font-weight:800;color:#000;margin-bottom:4px}
+    .appt-service{font-size:12px;color:var(--gold-dark);font-weight:700}
+    .appt-status-badge{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+    .appt-info{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--gray-light);border-bottom:1px solid var(--gray-light);margin-bottom:12px}
+    .appt-info-row{display:flex;align-items:center;gap:10px;font-size:13px}
+    .appt-info-icon{width:24px;height:24px;border-radius:7px;background:var(--gray-lighter);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+    .appt-info-text{color:#000;font-weight:600}
+    .appt-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .action{padding:11px;border-radius:12px;border:none;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+    .action:active{transform:scale(0.96)}
+    .action-confirm{background:rgba(34,197,94,0.12);color:#15803D;border:1px solid rgba(34,197,94,0.25)}
+    .action-complete{background:rgba(59,130,246,0.12);color:#1D4ED8;border:1px solid rgba(59,130,246,0.25)}
+    .action-cancel{background:rgba(239,68,68,0.1);color:#B91C1C;border:1px solid rgba(239,68,68,0.2)}
+    .action-call{background:rgba(201,169,97,0.12);color:var(--gold-dark);border:1px solid rgba(201,169,97,0.25)}
+    .logout-btn{width:100%;padding:14px;background:#fff;color:#EF4444;border:1.5px solid rgba(239,68,68,0.2);border-radius:14px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .logout-btn:active{background:rgba(239,68,68,0.05);transform:scale(0.98)}
+    .empty{text-align:center;padding:60px 20px}
+    .empty-icon{font-size:56px;margin-bottom:12px;opacity:0.5}
+    .empty-title{font-size:1.125rem;font-weight:800;margin-bottom:6px}
+    .empty-text{color:var(--gray);font-size:13.5px}
   </style>
+  <script>
+    // ============ GLOBAL LOGOUT (defined early for onclick handlers) ============
+    window.logout = function() {
+      if (!confirm('هل تريد تسجيل الخروج؟')) return;
+      try { localStorage.removeItem('elite_token'); localStorage.removeItem('elite_user'); } catch (e) {}
+      try { document.cookie = 'elite_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'; } catch (e) {}
+      try { document.cookie = 'elite_user=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'; } catch (e) {}
+      window.location.href = '/login.html';
+    };
+    
+    // ============ GLOBAL UPDATE STATUS (for onclick handlers) ============
+    window.updateStatus = function(id, newStatus) {
+      // Will be overridden by module after load
+      console.warn('updateStatus called before module ready');
+    };
+  </script>
 </head>
 <body>
 
@@ -516,13 +298,13 @@
 
         if (a.status === 'pending') {
           actions = `
-            <button class="action action-confirm" onclick="updateStatus(${a.id}, 'confirmed')">✅ تأكيد</button>
-            <button class="action action-cancel" onclick="updateStatus(${a.id}, 'cancelled')">❌ إلغاء</button>
+            <button class="action action-confirm" onclick="window.updateStatus(${a.id}, 'confirmed')">✅ تأكيد</button>
+            <button class="action action-cancel" onclick="window.updateStatus(${a.id}, 'cancelled')">❌ إلغاء</button>
           `;
         } else if (a.status === 'confirmed') {
           actions = `
-            <button class="action action-complete" onclick="updateStatus(${a.id}, 'completed')">🎉 إكمال</button>
-            <button class="action action-cancel" onclick="updateStatus(${a.id}, 'cancelled')">❌ إلغاء</button>
+            <button class="action action-complete" onclick="window.updateStatus(${a.id}, 'completed')">🎉 إكمال</button>
+            <button class="action action-cancel" onclick="window.updateStatus(${a.id}, 'cancelled')">❌ إلغاء</button>
           `;
         } else {
           actions = `
@@ -569,7 +351,7 @@
       }).join('');
     }
 
-    // ============ UPDATE STATUS ============
+    // ============ UPDATE STATUS (Enhanced - overwrites global) ============
     window.updateStatus = async function(id, newStatus) {
       const statusText = {
         confirmed: 'تأكيد',
@@ -577,46 +359,80 @@
         cancelled: 'إلغاء'
       }[newStatus] || 'تحديث';
 
-      const ok = await sheet.confirm({
-        title: `${statusText} الموعد؟`,
-        message: `هل أنت متأكد من ${statusText} هذا الموعد؟`,
-        confirmText: `${statusText}`,
-        cancelText: 'رجوع',
-        variant: newStatus === 'cancelled' ? 'btn-dark' : 'btn-primary'
-      });
+      let ok = false;
+      try {
+        if (sheet && typeof sheet.confirm === 'function') {
+          ok = await sheet.confirm({
+            title: `${statusText} الموعد؟`,
+            message: `هل أنت متأكد من ${statusText} هذا الموعد؟`,
+            confirmText: `${statusText}`,
+            cancelText: 'رجوع',
+            variant: newStatus === 'cancelled' ? 'btn-dark' : 'btn-primary'
+          });
+        } else {
+          ok = confirm(`هل أنت متأكد من ${statusText} هذا الموعد؟`);
+        }
+      } catch (e) {
+        ok = confirm(`هل أنت متأكد من ${statusText} هذا الموعد؟`);
+      }
 
       if (!ok) return;
 
-      loader.show();
+      try { loader.show(); } catch (e) {}
+
       try {
         await appointmentsAPI.doctorUpdate(id, { status: newStatus });
-        loader.hide();
-        haptic.success();
-        toast.success(`✅ تم ${statusText} الموعد`);
+        try { loader.hide(); } catch (e) {}
+        try { haptic.success(); } catch (e) {}
+        try { toast.success(`✅ تم ${statusText} الموعد`); } catch (e) {}
         await loadAppointments();
         await loadStats();
       } catch (err) {
-        loader.hide();
-        haptic.error();
-        toast.error(err.message || 'تعذّر التحديث');
+        try { loader.hide(); } catch (e) {}
+        try { haptic.error(); } catch (e) {}
+        try { toast.error(err.message || 'تعذّر التحديث'); } catch (e) { alert(err.message); }
       }
     };
 
-    // ============ LOGOUT ============
+    // ============ LOGOUT (Enhanced - overwrites global) ============
     window.logout = async function() {
-      const ok = await sheet.confirm({
-        title: 'تسجيل الخروج؟',
-        message: 'هل تريد الخروج من التطبيق؟',
-        confirmText: 'خروج',
-        cancelText: 'إلغاء',
-        variant: 'btn-dark'
-      });
-      
-      if (ok) {
-        await authAPI.logout();
-        haptic.medium();
-        window.location.href = '/login.html';
+      let ok = false;
+      try {
+        if (sheet && typeof sheet.confirm === 'function') {
+          ok = await sheet.confirm({
+            title: 'تسجيل الخروج؟',
+            message: 'هل تريد الخروج من التطبيق؟',
+            confirmText: 'خروج',
+            cancelText: 'إلغاء',
+            variant: 'btn-dark'
+          });
+        } else {
+          ok = confirm('هل تريد تسجيل الخروج؟');
+        }
+      } catch (e) {
+        ok = confirm('هل تريد تسجيل الخروج؟');
       }
+
+      if (!ok) return;
+
+      try { haptic.medium(); } catch (e) {}
+
+      // Try API logout
+      try {
+        await authAPI.logout();
+      } catch (e) {
+        console.error('API logout failed:', e);
+      }
+
+      // Manual cleanup fallback
+      try { auth.clear(); } catch (e) {}
+      try { localStorage.removeItem('elite_token'); localStorage.removeItem('elite_user'); } catch (e) {}
+      try {
+        document.cookie = 'elite_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = 'elite_user=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+      } catch (e) {}
+
+      window.location.href = '/login.html';
     };
   </script>
 </body>
