@@ -230,10 +230,7 @@
 
     async function adminRequest(path, options = {}) {
       let token = auth.getToken();
-      
-      if (!token) {
-        throw new Error('مش مسجّل دخول');
-      }
+      if (!token) throw new Error('مش مسجّل دخول');
       
       const res = await fetch(`${API_BASE}${path}`, {
         method: options.method || 'GET',
@@ -245,19 +242,13 @@
       });
       
       let data;
-      try {
-        data = await res.json();
-      } catch (e) {
-        throw new Error('رد غير صحيح من السيرفر');
-      }
+      try { data = await res.json(); }
+      catch (e) { throw new Error('رد غير صحيح من السيرفر'); }
       
       if (!res.ok || !data.success) {
-        if (res.status === 401 || res.status === 403) {
-          auth.clear();
-        }
+        if (res.status === 401 || res.status === 403) auth.clear();
         throw new Error(data.error || 'فشل الطلب');
       }
-      
       return data;
     }
 
@@ -276,19 +267,12 @@
     }
 
     function generateUsername(arabicName, specialty) {
-      const map = {
-        'أ':'a','ا':'a','إ':'e','ب':'b','ت':'t','ث':'th','ج':'g','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ى':'a','ة':'a','ء':'a','ئ':'e','ؤ':'o'
-      };
+      const map = {'أ':'a','ا':'a','إ':'e','ب':'b','ت':'t','ث':'th','ج':'g','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ى':'a','ة':'a','ء':'a','ئ':'e','ؤ':'o'};
       let name = arabicName.replace(/^د\.\s*/, '').trim();
       let result = '';
-      for (const char of name) {
-        if (char === ' ') continue;
-        result += map[char] || '';
-      }
+      for (const char of name) { if (char === ' ') continue; result += map[char] || ''; }
       if (!result) {
-        const specialtyMap = {
-          'أسنان':'dental','جراحة':'surgery','جلدية':'derma','أطفال':'kids','باطنة':'internal','عظام':'ortho','عيون':'eyes','قلب':'cardio','مخ وأعصاب':'neuro','أنف وأذن':'ent','نساء وتوليد':'gyno','مسالك':'urology'
-        };
+        const specialtyMap = {'أسنان':'dental','جراحة':'surgery','جلدية':'derma','أطفال':'kids','باطنة':'internal','عظام':'ortho','عيون':'eyes','قلب':'cardio','مخ وأعصاب':'neuro','أنف وأذن':'ent','نساء وتوليد':'gyno','مسالك':'urology'};
         result = specialtyMap[specialty] || 'doctor';
       }
       return result.toLowerCase();
@@ -304,10 +288,7 @@
 
     function copyToClipboard(text) {
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-          toast.success('✅ تم النسخ');
-          haptic.light();
-        }).catch(() => {});
+        navigator.clipboard.writeText(text).then(() => { toast.success('✅ تم النسخ'); haptic.light(); }).catch(() => {});
       } else {
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -332,23 +313,14 @@
         clinics = data.data || [];
         const qsClinics = document.getElementById('qs-clinics');
         if (qsClinics) qsClinics.textContent = clinics.length;
-
-        if (!clinics.length) {
-          c.innerHTML = '<div class="empty"><div class="empty-icon">🏥</div><div class="empty-title">لا توجد عيادات</div></div>';
-          return;
-        }
-
+        if (!clinics.length) { c.innerHTML = '<div class="empty"><div class="empty-icon">🏥</div><div class="empty-title">لا توجد عيادات</div></div>'; return; }
         c.innerHTML = clinics.map(cl => `
           <div class="item-card">
             <div class="item-top">
               <div class="item-icon">${getClinicIcon(cl.specialty)}</div>
               <div class="item-body">
                 <div class="item-title">${helpers.escape(cl.name)}</div>
-                <div class="item-sub">
-                  ${helpers.escape(cl.specialty || 'عام')}
-                  ${cl.address ? `<br>📍 ${helpers.escape(cl.address)}` : ''}
-                  ${cl.phone ? `<br>📞 ${helpers.escape(cl.phone)}` : ''}
-                </div>
+                <div class="item-sub">${helpers.escape(cl.specialty || 'عام')}${cl.address ? `<br>📍 ${helpers.escape(cl.address)}` : ''}${cl.phone ? `<br>📞 ${helpers.escape(cl.phone)}` : ''}</div>
               </div>
             </div>
             <div class="item-actions">
@@ -357,9 +329,7 @@
             </div>
           </div>
         `).join('');
-      } catch (err) {
-        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
-      }
+      } catch (err) { c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`; }
     }
 
     window.showClinicForm = function(clinic = null) {
@@ -367,16 +337,9 @@
       const content = document.createElement('div');
       content.className = 'form-dialog';
       content.innerHTML = `
-        <div class="form-group">
-          <label class="form-label">اسم العيادة <span class="req">*</span></label>
-          <input class="form-input" id="f-name" value="${clinic ? helpers.escape(clinic.name) : ''}" placeholder="مثال: عيادة د. أحمد">
-        </div>
-        <div class="form-group">
-          <label class="form-label">اسم الطبيب <span class="req">*</span></label>
-          <input class="form-input" id="f-doctor" value="${clinic ? helpers.escape(clinic.doctor_name || '') : ''}" placeholder="مثال: د. أحمد محمد" oninput="updateSuggestions()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">التخصص</label>
+        <div class="form-group"><label class="form-label">اسم العيادة <span class="req">*</span></label><input class="form-input" id="f-name" value="${clinic ? helpers.escape(clinic.name) : ''}" placeholder="مثال: عيادة د. أحمد"></div>
+        <div class="form-group"><label class="form-label">اسم الطبيب <span class="req">*</span></label><input class="form-input" id="f-doctor" value="${clinic ? helpers.escape(clinic.doctor_name || '') : ''}" placeholder="مثال: د. أحمد محمد" oninput="updateSuggestions()"></div>
+        <div class="form-group"><label class="form-label">التخصص</label>
           <select class="form-select" id="f-specialty" onchange="updateSuggestions()">
             <option value="أسنان" ${clinic?.specialty === 'أسنان' ? 'selected' : ''}>🦷 أسنان</option>
             <option value="جراحة" ${clinic?.specialty === 'جراحة' ? 'selected' : ''}>🔬 جراحة</option>
@@ -389,25 +352,12 @@
             <option value="مخ وأعصاب" ${clinic?.specialty === 'مخ وأعصاب' ? 'selected' : ''}>🧠 مخ وأعصاب</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">رقم الموبايل</label>
-          <input class="form-input" id="f-phone" dir="ltr" value="${clinic ? helpers.escape(clinic.phone || '') : ''}" placeholder="+971...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">رقم الواتساب</label>
-          <input class="form-input" id="f-whatsapp" dir="ltr" value="${clinic ? helpers.escape(clinic.whatsapp || '') : ''}" placeholder="اتركه فاضي لو نفسه">
-        </div>
-        <div class="form-group">
-          <label class="form-label">العنوان</label>
-          <input class="form-input" id="f-address" value="${clinic ? helpers.escape(clinic.address || '') : ''}" placeholder="مثال: بني ياس، أبوظبي">
-        </div>
-        <div class="form-group">
-          <label class="form-label">مواعيد العمل</label>
-          <input class="form-input" id="f-hours" value="${clinic ? helpers.escape(clinic.working_hours || '') : ''}" placeholder="مثال: 9ص - 9م">
-        </div>
+        <div class="form-group"><label class="form-label">رقم الموبايل</label><input class="form-input" id="f-phone" dir="ltr" value="${clinic ? helpers.escape(clinic.phone || '') : ''}" placeholder="+971..."></div>
+        <div class="form-group"><label class="form-label">رقم الواتساب</label><input class="form-input" id="f-whatsapp" dir="ltr" value="${clinic ? helpers.escape(clinic.whatsapp || '') : ''}" placeholder="اتركه فاضي لو نفسه"></div>
+        <div class="form-group"><label class="form-label">العنوان</label><input class="form-input" id="f-address" value="${clinic ? helpers.escape(clinic.address || '') : ''}" placeholder="مثال: بني ياس، أبوظبي"></div>
+        <div class="form-group"><label class="form-label">مواعيد العمل</label><input class="form-input" id="f-hours" value="${clinic ? helpers.escape(clinic.working_hours || '') : ''}" placeholder="مثال: 9ص - 9م"></div>
         ${!isEdit ? `<div id="suggestions-container"></div>` : ''}
       `;
-
       sheet.open({
         title: isEdit ? '✏️ تعديل عيادة' : '➕ إضافة عيادة',
         content,
@@ -425,38 +375,20 @@
                 address: document.getElementById('f-address').value.trim(),
                 working_hours: document.getElementById('f-hours').value.trim()
               };
-
-              if (!payload.name || !payload.doctor_name) {
-                toast.error('الاسم واسم الطبيب مطلوبين');
-                haptic.error();
-                return false;
-              }
-
+              if (!payload.name || !payload.doctor_name) { toast.error('الاسم واسم الطبيب مطلوبين'); haptic.error(); return false; }
               loader.show();
               try {
-                if (isEdit) {
-                  await adminRequest(`/api/clinics/${clinic.id}`, { method: 'PUT', body: payload });
-                  toast.success('✅ تم تعديل العيادة');
-                } else {
-                  await adminRequest('/api/clinics', { method: 'POST', body: payload });
-                  toast.success('✅ تم إضافة العيادة');
-                }
-                loader.hide();
-                haptic.success();
+                if (isEdit) { await adminRequest(`/api/clinics/${clinic.id}`, { method: 'PUT', body: payload }); toast.success('✅ تم تعديل العيادة'); }
+                else { await adminRequest('/api/clinics', { method: 'POST', body: payload }); toast.success('✅ تم إضافة العيادة'); }
+                loader.hide(); haptic.success();
                 await loadClinics();
-              } catch (err) {
-                loader.hide();
-                haptic.error();
-                toast.error(err.message || 'حدث خطأ');
-                return false;
-              }
+              } catch (err) { loader.hide(); haptic.error(); toast.error(err.message || 'حدث خطأ'); return false; }
               return true;
             }
           },
           { label: 'إلغاء', variant: 'btn-ghost', onClick: () => {} }
         ]
       });
-
       if (!isEdit) setTimeout(() => updateSuggestions(), 100);
     };
 
@@ -465,24 +397,13 @@
       if (!container) return;
       const doctorName = document.getElementById('f-doctor')?.value.trim();
       const specialty = document.getElementById('f-specialty')?.value;
-      if (!doctorName || doctorName.length < 3) {
-        container.innerHTML = '';
-        return;
-      }
+      if (!doctorName || doctorName.length < 3) { container.innerHTML = ''; return; }
       const { email, password } = generateSuggestions(doctorName, specialty);
       container.innerHTML = `
         <div class="suggest-box">
           <div class="suggest-title">💡 اقتراح تلقائي لحساب الطبيب</div>
-          <div class="suggest-row">
-            <span class="suggest-label">الإيميل:</span>
-            <span class="suggest-value" onclick="copyToClipboard('${email}')">${email}</span>
-            <button class="suggest-copy" onclick="copyToClipboard('${email}')">📋</button>
-          </div>
-          <div class="suggest-row">
-            <span class="suggest-label">الباسورد:</span>
-            <span class="suggest-value" onclick="copyToClipboard('${password}')">${password}</span>
-            <button class="suggest-copy" onclick="copyToClipboard('${password}')">📋</button>
-          </div>
+          <div class="suggest-row"><span class="suggest-label">الإيميل:</span><span class="suggest-value" onclick="copyToClipboard('${email}')">${email}</span><button class="suggest-copy" onclick="copyToClipboard('${email}')">📋</button></div>
+          <div class="suggest-row"><span class="suggest-label">الباسورد:</span><span class="suggest-value" onclick="copyToClipboard('${password}')">${password}</span><button class="suggest-copy" onclick="copyToClipboard('${password}')">📋</button></div>
         </div>
       `;
     };
@@ -493,11 +414,7 @@
     };
 
     window.deleteClinic = async function(id) {
-      const ok = await sheet.confirm({
-        title: 'حذف العيادة؟',
-        message: 'هل أنت متأكد؟ سيتم حذف كل شيء مرتبط بها.',
-        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
-      });
+      const ok = await sheet.confirm({ title: 'حذف العيادة؟', message: 'هل أنت متأكد؟ سيتم حذف كل شيء مرتبط بها.', confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark' });
       if (!ok) return;
       loader.show();
       try {
@@ -505,10 +422,7 @@
         loader.hide(); haptic.success();
         toast.success('✅ تم حذف العيادة');
         await loadClinics();
-      } catch (err) {
-        loader.hide();
-        toast.error(err.message || 'تعذّر الحذف');
-      }
+      } catch (err) { loader.hide(); toast.error(err.message || 'تعذّر الحذف'); }
     };
 
     // ============ DOCTORS ============
@@ -521,12 +435,7 @@
       try {
         const data = await adminAPI.doctors();
         doctors = data.data || [];
-
-        if (!doctors.length) {
-          c.innerHTML = '<div class="empty"><div class="empty-icon">👨‍⚕️</div><div class="empty-title">لا يوجد أطباء</div></div>';
-          return;
-        }
-
+        if (!doctors.length) { c.innerHTML = '<div class="empty"><div class="empty-icon">👨‍⚕️</div><div class="empty-title">لا يوجد أطباء</div></div>'; return; }
         c.innerHTML = doctors.map(d => `
           <div class="item-card">
             <div class="item-top">
@@ -542,50 +451,47 @@
               </div>
             </div>
             <div class="item-actions">
-              <button class="item-btn btn-password" onclick="changePassword(${d.id}, '${helpers.escape(d.full_name)}')">🔑 تغيير الباسورد</button>
-              <button class="item-btn btn-call" onclick="window.location.href='tel:${d.phone || ''}'">📞 اتصال</button>
+              <button class="item-btn btn-password" onclick="changePassword(${d.id}, '${helpers.escape(d.full_name)}')">🔑 باسورد</button>
+              <button class="item-btn btn-delete" onclick="deleteDoctor(${d.id}, '${helpers.escape(d.full_name)}')">🗑️ حذف</button>
             </div>
           </div>
         `).join('');
-      } catch (err) {
-        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
-      }
+      } catch (err) { c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`; }
     }
 
+    window.deleteDoctor = async function(userId, userName) {
+      const ok = await sheet.confirm({
+        title: 'حذف الطبيب؟',
+        message: `هل أنت متأكد من حذف "${userName}"؟ سيتم إلغاء تنشيط الحساب.`,
+        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
+      });
+      if (!ok) return;
+      loader.show();
+      try {
+        await adminRequest(`/api/admin/doctors/${userId}`, { method: 'DELETE' });
+        loader.hide(); haptic.success();
+        toast.success('✅ تم حذف الطبيب');
+        await loadDoctors();
+      } catch (err) { loader.hide(); haptic.error(); toast.error(err.message || 'تعذّر الحذف'); }
+    };
+
     window.showDoctorForm = function() {
-      if (!clinics.length) {
-        toast.error('أضف عيادة أولاً');
-        return;
-      }
+      if (!clinics.length) { toast.error('أضف عيادة أولاً'); return; }
       const content = document.createElement('div');
       content.className = 'form-dialog';
       content.innerHTML = `
-        <div class="form-group">
-          <label class="form-label">اسم الطبيب <span class="req">*</span></label>
-          <input class="form-input" id="d-name" placeholder="مثال: د. أحمد محمد" oninput="updateDoctorSuggestions()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">العيادة <span class="req">*</span></label>
+        <div class="form-group"><label class="form-label">اسم الطبيب <span class="req">*</span></label><input class="form-input" id="d-name" placeholder="مثال: د. أحمد محمد" oninput="updateDoctorSuggestions()"></div>
+        <div class="form-group"><label class="form-label">العيادة <span class="req">*</span></label>
           <select class="form-select" id="d-clinic" onchange="updateDoctorSuggestions()">
             <option value="">اختر العيادة...</option>
             ${clinics.map(c => `<option value="${c.id}" data-specialty="${c.specialty}">${helpers.escape(c.name)}</option>`).join('')}
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">الإيميل <span class="req">*</span></label>
-          <input class="form-input" id="d-email" dir="ltr" type="email" placeholder="dr.ahmed@clinic.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">الباسورد <span class="req">*</span></label>
-          <input class="form-input" id="d-password" dir="ltr" placeholder="Ahmed@2026">
-        </div>
-        <div class="form-group">
-          <label class="form-label">رقم الموبايل</label>
-          <input class="form-input" id="d-phone" dir="ltr" placeholder="+971...">
-        </div>
+        <div class="form-group"><label class="form-label">الإيميل <span class="req">*</span></label><input class="form-input" id="d-email" dir="ltr" type="email" placeholder="dr.ahmed@clinic.com"></div>
+        <div class="form-group"><label class="form-label">الباسورد <span class="req">*</span></label><input class="form-input" id="d-password" dir="ltr" placeholder="Ahmed@2026"></div>
+        <div class="form-group"><label class="form-label">رقم الموبايل</label><input class="form-input" id="d-phone" dir="ltr" placeholder="+971..."></div>
         <div id="doctor-suggestions"></div>
       `;
-
       sheet.open({
         title: '➕ إضافة طبيب',
         content,
@@ -601,27 +507,15 @@
                 password: document.getElementById('d-password').value,
                 phone: document.getElementById('d-phone').value.trim()
               };
-              if (!payload.full_name || !payload.email || !payload.password) {
-                toast.error('الاسم والإيميل والباسورد مطلوبين');
-                haptic.error();
-                return false;
-              }
-              if (payload.password.length < 6) {
-                toast.error('الباسورد لازم 6 أحرف على الأقل');
-                haptic.error();
-                return false;
-              }
+              if (!payload.full_name || !payload.email || !payload.password) { toast.error('الاسم والإيميل والباسورد مطلوبين'); haptic.error(); return false; }
+              if (payload.password.length < 6) { toast.error('الباسورد لازم 6 أحرف على الأقل'); haptic.error(); return false; }
               loader.show();
               try {
                 await adminAPI.createDoctor(payload);
                 loader.hide(); haptic.success();
                 toast.success('✅ تم إضافة الطبيب');
                 await loadDoctors();
-              } catch (err) {
-                loader.hide(); haptic.error();
-                toast.error(err.message || 'حدث خطأ');
-                return false;
-              }
+              } catch (err) { loader.hide(); haptic.error(); toast.error(err.message || 'حدث خطأ'); return false; }
               return true;
             }
           },
@@ -643,15 +537,7 @@
       const passField = document.getElementById('d-password');
       if (emailField && !emailField.value) emailField.value = email;
       if (passField && !passField.value) passField.value = password;
-      container.innerHTML = `
-        <div class="suggest-box">
-          <div class="suggest-title">💡 الاقتراح المطبّق</div>
-          <div style="font-size: 11.5px; color: var(--gray); line-height: 1.6;">
-            📧 <span dir="ltr">${email}</span><br>
-            🔐 <span dir="ltr">${password}</span>
-          </div>
-        </div>
-      `;
+      container.innerHTML = `<div class="suggest-box"><div class="suggest-title">💡 الاقتراح المطبّق</div><div style="font-size: 11.5px; color: var(--gray); line-height: 1.6;">📧 <span dir="ltr">${email}</span><br>🔐 <span dir="ltr">${password}</span></div></div>`;
     };
 
     window.changePassword = async function(userId, userName) {
@@ -662,10 +548,7 @@
           <div style="font-size: 13px; color: var(--gray);">تغيير باسورد</div>
           <div style="font-size: 15px; font-weight: 800; color: #000; margin-top: 4px;">${helpers.escape(userName)}</div>
         </div>
-        <div class="form-group">
-          <label class="form-label">الباسورد الجديد <span class="req">*</span></label>
-          <input class="form-input" id="np" dir="ltr" type="text" placeholder="NewPassword@2026">
-        </div>
+        <div class="form-group"><label class="form-label">الباسورد الجديد <span class="req">*</span></label><input class="form-input" id="np" dir="ltr" type="text" placeholder="NewPassword@2026"></div>
       `;
       sheet.open({
         title: '🔑 تغيير باسورد',
@@ -676,20 +559,13 @@
             variant: 'btn-primary',
             onClick: async () => {
               const newPass = document.getElementById('np').value;
-              if (!newPass || newPass.length < 6) {
-                toast.error('الباسورد لازم 6 أحرف على الأقل');
-                return false;
-              }
+              if (!newPass || newPass.length < 6) { toast.error('الباسورد لازم 6 أحرف على الأقل'); return false; }
               loader.show();
               try {
                 await adminAPI.changePassword(userId, newPass);
                 loader.hide(); haptic.success();
                 toast.success('✅ تم تغيير الباسورد');
-              } catch (err) {
-                loader.hide();
-                toast.error(err.message || 'حدث خطأ');
-                return false;
-              }
+              } catch (err) { loader.hide(); toast.error(err.message || 'حدث خطأ'); return false; }
               return true;
             }
           },
@@ -710,33 +586,17 @@
         services = data.data || [];
         const qsServices = document.getElementById('qs-services');
         if (qsServices) qsServices.textContent = services.length;
-
-        if (!services.length) {
-          c.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">لا توجد خدمات</div></div>';
-          return;
-        }
-
-        // Group by clinic
+        if (!services.length) { c.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">لا توجد خدمات</div></div>'; return; }
         const byClinic = {};
-        services.forEach(s => {
-          const key = s.clinic_id || 0;
-          if (!byClinic[key]) byClinic[key] = [];
-          byClinic[key].push(s);
-        });
-
+        services.forEach(s => { const key = s.clinic_id || 0; if (!byClinic[key]) byClinic[key] = []; byClinic[key].push(s); });
         let html = '';
         Object.keys(byClinic).sort().forEach(clinicId => {
           const clinic = clinics.find(c => c.id === parseInt(clinicId));
           const group = byClinic[clinicId];
-          const title = clinicId === '0' || clinicId === 0
-            ? '📌 خدمات مشتركة (كل العيادات)'
-            : `🏥 ${clinic ? helpers.escape(clinic.name) : 'عيادة #' + clinicId} (${group.length})`;
-          
+          const title = clinicId === '0' || clinicId === 0 ? '📌 خدمات مشتركة (كل العيادات)' : `🏥 ${clinic ? helpers.escape(clinic.name) : 'عيادة #' + clinicId} (${group.length})`;
           html += `
             <div style="margin-bottom:16px;">
-              <div style="font-size:13px;font-weight:800;color:var(--gold-dark);margin-bottom:10px;padding:8px 12px;background:rgba(201,169,97,0.08);border-radius:10px;">
-                ${title}
-              </div>
+              <div style="font-size:13px;font-weight:800;color:var(--gold-dark);margin-bottom:10px;padding:8px 12px;background:rgba(201,169,97,0.08);border-radius:10px;">${title}</div>
               ${group.map(s => `
                 <div class="item-card">
                   <div class="item-top">
@@ -756,9 +616,7 @@
           `;
         });
         c.innerHTML = html;
-      } catch (err) {
-        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
-      }
+      } catch (err) { c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`; }
     }
 
     window.showServiceForm = function(service = null) {
@@ -766,39 +624,19 @@
       const content = document.createElement('div');
       content.className = 'form-dialog';
       content.innerHTML = `
-        <div class="form-group">
-          <label class="form-label">اسم الخدمة <span class="req">*</span></label>
-          <input class="form-input" id="s-name" value="${service ? helpers.escape(service.name) : ''}" placeholder="مثال: زراعة أسنان">
-        </div>
-        <div class="form-group">
-          <label class="form-label">العيادة <span class="req">*</span></label>
+        <div class="form-group"><label class="form-label">اسم الخدمة <span class="req">*</span></label><input class="form-input" id="s-name" value="${service ? helpers.escape(service.name) : ''}" placeholder="مثال: زراعة أسنان"></div>
+        <div class="form-group"><label class="form-label">العيادة <span class="req">*</span></label>
           <select class="form-select" id="s-clinic">
             <option value="">-- اختر العيادة --</option>
             ${clinics.map(c => `<option value="${c.id}" ${service?.clinic_id == c.id ? 'selected' : ''}>${helpers.escape(c.name)}</option>`).join('')}
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">السعر (AED) <span class="req">*</span></label>
-          <input class="form-input" id="s-price" type="number" value="${service ? service.price_aed : ''}" placeholder="500">
-        </div>
-        <div class="form-group">
-          <label class="form-label">الفئة</label>
-          <input class="form-input" id="s-cat" value="${service ? helpers.escape(service.category || '') : ''}" placeholder="مثال: أسنان - تجميل">
-        </div>
-        <div class="form-group">
-          <label class="form-label">الأيقونة (Emoji)</label>
-          <input class="form-input" id="s-icon" value="${service ? helpers.escape(service.icon || '⚕️') : '⚕️'}" placeholder="🦷">
-        </div>
-        <div class="form-group">
-          <label class="form-label">المدة (دقائق)</label>
-          <input class="form-input" id="s-duration" type="number" value="${service ? service.duration_minutes : 30}">
-        </div>
-        <div class="form-group">
-          <label class="form-label">الوصف</label>
-          <textarea class="form-textarea" id="s-desc" placeholder="وصف مختصر للخدمة">${service ? helpers.escape(service.description || '') : ''}</textarea>
-        </div>
+        <div class="form-group"><label class="form-label">السعر (AED) <span class="req">*</span></label><input class="form-input" id="s-price" type="number" value="${service ? service.price_aed : ''}" placeholder="500"></div>
+        <div class="form-group"><label class="form-label">الفئة</label><input class="form-input" id="s-cat" value="${service ? helpers.escape(service.category || '') : ''}" placeholder="مثال: أسنان - تجميل"></div>
+        <div class="form-group"><label class="form-label">الأيقونة</label><input class="form-input" id="s-icon" value="${service ? helpers.escape(service.icon || '⚕️') : '⚕️'}" placeholder="🦷"></div>
+        <div class="form-group"><label class="form-label">المدة (دقائق)</label><input class="form-input" id="s-duration" type="number" value="${service ? service.duration_minutes : 30}"></div>
+        <div class="form-group"><label class="form-label">الوصف</label><textarea class="form-textarea" id="s-desc" placeholder="وصف مختصر">${service ? helpers.escape(service.description || '') : ''}</textarea></div>
       `;
-
       sheet.open({
         title: isEdit ? '✏️ تعديل خدمة' : '➕ إضافة خدمة',
         content,
@@ -816,32 +654,15 @@
                 duration_minutes: parseInt(document.getElementById('s-duration').value) || 30,
                 description: document.getElementById('s-desc').value.trim()
               };
-              if (!payload.name || isNaN(payload.price_aed)) {
-                toast.error('الاسم والسعر مطلوبين');
-                haptic.error();
-                return false;
-              }
-              if (!payload.clinic_id) {
-                toast.error('اختر العيادة');
-                haptic.error();
-                return false;
-              }
+              if (!payload.name || isNaN(payload.price_aed)) { toast.error('الاسم والسعر مطلوبين'); haptic.error(); return false; }
+              if (!payload.clinic_id) { toast.error('اختر العيادة'); haptic.error(); return false; }
               loader.show();
               try {
-                if (isEdit) {
-                  await adminRequest(`/api/services/${service.id}`, { method: 'PUT', body: payload });
-                  toast.success('✅ تم تعديل الخدمة');
-                } else {
-                  await adminRequest('/api/services', { method: 'POST', body: payload });
-                  toast.success('✅ تم إضافة الخدمة');
-                }
+                if (isEdit) { await adminRequest(`/api/services/${service.id}`, { method: 'PUT', body: payload }); toast.success('✅ تم تعديل الخدمة'); }
+                else { await adminRequest('/api/services', { method: 'POST', body: payload }); toast.success('✅ تم إضافة الخدمة'); }
                 loader.hide(); haptic.success();
                 await loadServices();
-              } catch (err) {
-                loader.hide(); haptic.error();
-                toast.error(err.message || 'حدث خطأ');
-                return false;
-              }
+              } catch (err) { loader.hide(); haptic.error(); toast.error(err.message || 'حدث خطأ'); return false; }
               return true;
             }
           },
@@ -856,11 +677,7 @@
     };
 
     window.deleteService = async function(id) {
-      const ok = await sheet.confirm({
-        title: 'حذف الخدمة؟',
-        message: 'هل أنت متأكد من الحذف؟',
-        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
-      });
+      const ok = await sheet.confirm({ title: 'حذف الخدمة؟', message: 'هل أنت متأكد من الحذف؟', confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark' });
       if (!ok) return;
       loader.show();
       try {
@@ -868,10 +685,7 @@
         loader.hide(); haptic.success();
         toast.success('✅ تم حذف الخدمة');
         await loadServices();
-      } catch (err) {
-        loader.hide();
-        toast.error(err.message || 'تعذّر الحذف');
-      }
+      } catch (err) { loader.hide(); toast.error(err.message || 'تعذّر الحذف'); }
     };
 
     // ============ APPOINTMENTS ============
@@ -884,11 +698,7 @@
         const appts = data.data || [];
         const qsAppts = document.getElementById('qs-appts');
         if (qsAppts) qsAppts.textContent = appts.length;
-
-        if (!appts.length) {
-          c.innerHTML = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">لا توجد حجوزات</div></div>';
-          return;
-        }
+        if (!appts.length) { c.innerHTML = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">لا توجد حجوزات</div></div>'; return; }
 
         const statusMap = {
           pending: { text: '⏳ قيد الانتظار', color: '#B45309', bg: 'rgba(245,158,11,0.15)' },
@@ -899,6 +709,23 @@
 
         c.innerHTML = appts.map(a => {
           const st = statusMap[a.status] || statusMap.pending;
+          let actions = '';
+          if (a.status === 'pending') {
+            actions = `
+              <button class="item-btn btn-call" onclick="updateAppointmentStatus(${a.id}, 'confirmed')">✅ تأكيد</button>
+              <button class="item-btn btn-delete" onclick="updateAppointmentStatus(${a.id}, 'cancelled')">❌ إلغاء</button>
+            `;
+          } else if (a.status === 'confirmed') {
+            actions = `
+              <button class="item-btn btn-edit" onclick="updateAppointmentStatus(${a.id}, 'completed')">🎉 إكمال</button>
+              <button class="item-btn btn-delete" onclick="updateAppointmentStatus(${a.id}, 'cancelled')">❌ إلغاء</button>
+            `;
+          } else {
+            actions = `
+              <button class="item-btn btn-call" onclick="window.location.href='tel:${a.customer_phone}'">📞 اتصال</button>
+              <button class="item-btn btn-delete" onclick="deleteAppointment(${a.id})">🗑️ حذف</button>
+            `;
+          }
           return `
             <div class="item-card">
               <div class="item-top">
@@ -915,28 +742,35 @@
                 </div>
               </div>
               <div style="padding-top: 8px;">
-                <span style="padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: ${st.bg}; color: ${st.color};">
-                  ${st.text}
-                </span>
+                <span style="padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: ${st.bg}; color: ${st.color};">${st.text}</span>
               </div>
-              <div class="item-actions" style="margin-top: 12px;">
-                <button class="item-btn btn-call" onclick="window.location.href='tel:${a.customer_phone}'">📞 اتصال</button>
-                <button class="item-btn btn-delete" onclick="deleteAppointment(${a.id})">🗑️ حذف</button>
-              </div>
+              <div class="item-actions" style="margin-top: 12px;">${actions}</div>
             </div>
           `;
         }).join('');
-      } catch (err) {
-        c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`;
-      }
+      } catch (err) { c.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">تعذّر التحميل</div></div>`; }
     }
 
-    window.deleteAppointment = async function(id) {
+    window.updateAppointmentStatus = async function(appointmentId, newStatus) {
+      const statusText = { confirmed: 'تأكيد', completed: 'إكمال', cancelled: 'إلغاء' }[newStatus] || 'تحديث';
       const ok = await sheet.confirm({
-        title: 'حذف الحجز؟',
-        message: 'هل أنت متأكد من حذف هذا الحجز؟',
-        confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark'
+        title: `${statusText} الحجز؟`,
+        message: `هل أنت متأكد من ${statusText} هذا الحجز؟`,
+        confirmText: statusText, cancelText: 'رجوع',
+        variant: newStatus === 'cancelled' ? 'btn-dark' : 'btn-primary'
       });
+      if (!ok) return;
+      loader.show();
+      try {
+        await adminRequest(`/api/admin/appointments/${appointmentId}`, { method: 'PATCH', body: { status: newStatus } });
+        loader.hide(); haptic.success();
+        toast.success(`✅ تم ${statusText} الحجز`);
+        await loadAppointments();
+      } catch (err) { loader.hide(); haptic.error(); toast.error(err.message || 'تعذّر التحديث'); }
+    };
+
+    window.deleteAppointment = async function(id) {
+      const ok = await sheet.confirm({ title: 'حذف الحجز؟', message: 'هل أنت متأكد من حذف هذا الحجز؟', confirmText: 'حذف', cancelText: 'إلغاء', variant: 'btn-dark' });
       if (!ok) return;
       loader.show();
       try {
@@ -944,19 +778,12 @@
         loader.hide(); haptic.success();
         toast.success('✅ تم حذف الحجز');
         await loadAppointments();
-      } catch (err) {
-        loader.hide();
-        toast.error(err.message || 'تعذّر الحذف');
-      }
+      } catch (err) { loader.hide(); toast.error(err.message || 'تعذّر الحذف'); }
     };
 
     // ============ LOGOUT ============
     window.logout = async function() {
-      const ok = await sheet.confirm({
-        title: 'تسجيل الخروج؟',
-        message: 'هل تريد الخروج؟',
-        confirmText: 'خروج', cancelText: 'إلغاء', variant: 'btn-dark'
-      });
+      const ok = await sheet.confirm({ title: 'تسجيل الخروج؟', message: 'هل تريد الخروج؟', confirmText: 'خروج', cancelText: 'إلغاء', variant: 'btn-dark' });
       if (ok) {
         await authAPI.logout();
         haptic.medium();
